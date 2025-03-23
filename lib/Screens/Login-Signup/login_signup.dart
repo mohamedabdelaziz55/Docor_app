@@ -6,9 +6,14 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'login.dart';
 
-class login_signup extends StatelessWidget {
+class login_signup extends StatefulWidget {
   const login_signup({super.key});
 
+  @override
+  State<login_signup> createState() => _login_signupState();
+}
+
+class _login_signupState extends State<login_signup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,7 +106,7 @@ class login_signup extends StatelessWidget {
               Navigator.pushReplacement(
                   context,
                   PageTransition(
-                      type: PageTransitionType.rightToLeft, child: register()));
+                      type: PageTransitionType.rightToLeft, child: Register()));
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Color.fromARGB(255, 255, 255, 255),

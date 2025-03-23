@@ -11,9 +11,14 @@ import '../Widgets/auth_social_login.dart';
 import 'forgot_pass.dart';
 import 'login_signup.dart';
 
-class login extends StatelessWidget {
+class login extends StatefulWidget {
   const login({super.key});
 
+  @override
+  State<login> createState() => _loginState();
+}
+
+class _loginState extends State<login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,7 +135,7 @@ class login extends StatelessWidget {
                       context,
                       PageTransition(
                           type: PageTransitionType.rightToLeft,
-                          child: register()));
+                          child: Register()));
                 },
                 child: Text(
                   "Sign Up",
