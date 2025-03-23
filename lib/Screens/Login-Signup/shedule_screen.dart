@@ -7,6 +7,7 @@ import '../Views/shedule_tab2.dart';
 
 class shedule_screen extends StatefulWidget {
   const shedule_screen({Key? key}) : super(key: key);
+  static String id="shedule_screen";
 
   @override
   _TabBarExampleState createState() => _TabBarExampleState();

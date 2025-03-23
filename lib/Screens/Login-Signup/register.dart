@@ -11,6 +11,7 @@ import 'login.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
+  static String id="Register";
 
   @override
   State<Register> createState() => _RegisterState();

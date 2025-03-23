@@ -8,6 +8,7 @@ import 'login.dart';
 
 class login_signup extends StatefulWidget {
   const login_signup({super.key});
+  static String id="login_signup";
 
   @override
   State<login_signup> createState() => _login_signupState();

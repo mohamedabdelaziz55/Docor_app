@@ -6,6 +6,7 @@ import '../Widgets/profile_list.dart';
 
 class Profile_screen extends StatelessWidget {
   const Profile_screen({super.key});
+  static String id="Profile_screen";
 
   @override
   Widget build(BuildContext context) {

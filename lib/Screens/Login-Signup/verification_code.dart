@@ -4,6 +4,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 class verification_code extends StatelessWidget {
   const verification_code({super.key});
+  static String id="verification_code";
 
   @override
   Widget build(BuildContext context) {

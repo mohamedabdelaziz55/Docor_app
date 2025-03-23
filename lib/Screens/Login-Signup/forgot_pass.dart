@@ -9,6 +9,7 @@ import 'login.dart';
 
 class forgot_pass extends StatefulWidget {
   const forgot_pass({Key? key}) : super(key: key);
+  static String id="forgot_pass";
 
   @override
   _TabBarExampleState createState() => _TabBarExampleState();

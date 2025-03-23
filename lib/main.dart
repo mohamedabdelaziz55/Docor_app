@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
+import 'Screens/Login-Signup/login.dart';
+import 'Screens/Login-Signup/register.dart';
+import 'Screens/Views/Homepage.dart';
+import 'Screens/Views/Homepage.dart';
 import 'Screens/Views/Screen1.dart';
 
-void main() {
+late SharedPreferences sp;
+void main()async {
+  WidgetsFlutterBinding.ensureInitialized();
+  sp=await SharedPreferences.getInstance();
   runApp(const Medics());
 }
 
@@ -14,9 +22,15 @@ class Medics extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ResponsiveSizer(builder: (context, orientation, screenType) {
-      return const MaterialApp(
+      return  MaterialApp(
+        initialRoute: sp.getString("id")==null ? login.id : Homepage.id,
         debugShowCheckedModeBanner: false,
-        home: Screen1(),
+    routes: {
+      login.id:(context)=>login(),
+      Homepage.id:(context)=>Homepage(),
+      Register.id:(context)=>Register(),
+
+    },
       );
     });
   }

@@ -8,6 +8,8 @@ import 'Dashboard_screen.dart';
 
 
 class Homepage extends StatefulWidget {
+  static String id="Homepage";
+
   @override
   State<Homepage> createState() => _HomepageState();
 }
