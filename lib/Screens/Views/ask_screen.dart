@@ -20,7 +20,6 @@ class _AskScreenState extends State<AskScreen> {
   Future<void> addPost() async {
     final userId = sp.getString("id");
     print("User ID: $userId");
-
     if (userId == null || text.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("الرجاء إدخال سؤال وتسجيل الدخول أولاً.")),
@@ -37,7 +36,6 @@ class _AskScreenState extends State<AskScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("تم إرسال السؤال بنجاح")),
       );
-      text.clear();
       Navigator.pushReplacement(
         context,
         PageTransition(
@@ -45,6 +43,7 @@ class _AskScreenState extends State<AskScreen> {
           child: QuestionsScreen(),
         ),
       );
+      text.clear();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("فشل إرسال السؤال. حاول مرة أخرى.")),
