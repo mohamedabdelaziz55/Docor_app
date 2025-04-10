@@ -27,7 +27,7 @@ class _loginState extends State<login> {
 
   bool isLoading = false;
 
-  Future<void> LoginPhp() async {
+  Future<void> login() async {
     if (formKey.currentState!.validate()) {
       setState(() => isLoading = true);
 
@@ -38,7 +38,6 @@ class _loginState extends State<login> {
 
       setState(() => isLoading = false);
 
-      // تحقق مما إذا كانت الاستجابة غير فارغة
       if (response == null) {
         print("خطأ: لم يتم استلام استجابة من السيرفر.");
         ScaffoldMessenger.of(context).showSnackBar(
@@ -50,18 +49,16 @@ class _loginState extends State<login> {
       print("استجابة السيرفر: $response");
 
       if (response['status'] == "success") {
-        sp.setString("id", response['data']['id'].toString());
-        sp.setString("name", response['data']['name']);
-        sp.setString("email", response['data']['email']);
+        await sp.setString("id", response['data']['id'].toString());
+        await sp.setString("name", response['data']['name']);
+        await sp.setString("email", response['data']['email']);
 
-        if (sp.getString("id") != null) {
-          Navigator.pushReplacement(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) => Homepage(),
-            ),
-          );
-        }
+        print("Saved ID: ${sp.getString("id")}");
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Homepage()),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("فشل تسجيل الدخول")),
@@ -175,7 +172,7 @@ class _loginState extends State<login> {
                   width: MediaQuery.of(context).size.width * 0.9,
                   child: ElevatedButton(
                     onPressed: () async {
-                      await LoginPhp();
+                      await login();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color.fromARGB(255, 3, 190, 150),
@@ -185,7 +182,7 @@ class _loginState extends State<login> {
                     ),
                     child: GestureDetector(
                       onTap: () async {
-                        await LoginPhp();
+                        await login();
                       },
                       child:
                           isLoading == true

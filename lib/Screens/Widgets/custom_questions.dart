@@ -1,16 +1,38 @@
-import 'package:doctor_app/date/dummy_questions&&anser.dart';
-import 'package:doctor_app/models/models_patient/model_questions.dart';
+import 'package:doctor_app/models/models_patient/model_date_json.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import '../Views/anser_questions_screen.dart';
 
-class CustomQuestions extends StatelessWidget {
-  const CustomQuestions({
-    super.key, required this.modelQuestions,
-  });
+class CustomQuestions extends StatefulWidget {
+  const CustomQuestions({super.key, required this.modelAsk});
 
-  final ModelQuestions modelQuestions;
+  final Data modelAsk;
+
+  @override
+  _CustomQuestionsState createState() => _CustomQuestionsState();
+}
+
+class _CustomQuestionsState extends State<CustomQuestions> {
+  String timeAgo(String dateTime) {
+    DateTime postDate = DateTime.parse(dateTime);
+    final Duration difference = DateTime.now().difference(postDate);
+
+    if (difference.inSeconds < 60) {
+      return "منذ ثوانٍ";
+    } else if (difference.inMinutes < 60) {
+      return "منذ ${difference.inMinutes} دقيقة";
+    } else if (difference.inHours < 24) {
+      return "منذ ${difference.inHours} ساعة";
+    } else if (difference.inDays < 7) {
+      return "منذ ${difference.inDays} يوم";
+    } else if (difference.inDays < 30) {
+      return "منذ ${difference.inDays ~/ 7} أسبوع";
+    } else if (difference.inDays < 365) {
+      return "منذ ${difference.inDays ~/ 30} شهر";
+    } else {
+      return "منذ ${difference.inDays ~/ 365} سنة";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +59,7 @@ class CustomQuestions extends StatelessWidget {
                         color: Colors.grey.shade500,
                       ),
                       Text(
-                        ' 8 Hours',
+                        timeAgo(widget.modelAsk.postDate ?? 'Unknown date'),
                         style: TextStyle(color: Colors.grey.shade500),
                       ),
                     ],
@@ -60,7 +82,7 @@ class CustomQuestions extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  modelQuestions.ask,
+                  widget.modelAsk.questionsText ?? 'No question available',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -79,15 +101,15 @@ class CustomQuestions extends StatelessWidget {
                 children: [
                   TextButton(
                     onPressed: () {
-                      int questionIndex = dummyQuestions.indexOf(modelQuestions);
+                      // int questionIndex = dummyQuestions.indexOf(modelQuestions);
                       Navigator.pushReplacement(
                         context,
                         PageTransition(
                           type: PageTransitionType.rightToLeft,
-                          child: AnserQuestionsScreen(
-                            modelQuestions: modelQuestions,
-                            modelAnswer: dummyAnswer[questionIndex],
-                          ),
+                          // child: AnserQuestionsScreen(
+                          //   // modelQuestions: modelAsk,
+                          //   // modelAnswer: dummyAnswer[questionIndex],
+                          // ),
                         ),
                       );
                     },

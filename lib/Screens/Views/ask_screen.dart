@@ -1,9 +1,56 @@
 import 'package:doctor_app/Screens/Views/questions_screen.dart';
+import 'package:doctor_app/crud.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
-class AskScreen extends StatelessWidget {
+import '../../constet.dart';
+import '../../main.dart';
+
+class AskScreen extends StatefulWidget {
   const AskScreen({super.key});
+
+  @override
+  State<AskScreen> createState() => _AskScreenState();
+}
+
+class _AskScreenState extends State<AskScreen> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final TextEditingController text = TextEditingController();
+  final Crud _crud = Crud();
+  Future<void> addPost() async {
+    final userId = sp.getString("id");
+    print("User ID: $userId");
+
+    if (userId == null || text.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("الرجاء إدخال سؤال وتسجيل الدخول أولاً.")),
+      );
+      return;
+    }
+
+    var response = await _crud.postRequest(linkAdd, {
+      "questions_text": text.text,
+      "id": userId,
+    });
+
+    if (response["status"] == "success") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("تم إرسال السؤال بنجاح")),
+      );
+      text.clear();
+      Navigator.pushReplacement(
+        context,
+        PageTransition(
+          type: PageTransitionType.rightToLeft,
+          child: QuestionsScreen(),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("فشل إرسال السؤال. حاول مرة أخرى.")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,70 +71,85 @@ class AskScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Ask Your Question',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Color.fromARGB(255, 3, 190, 150),
-              ),
-            ),
-            SizedBox(height: 15),
-            Text(
-              'Please provide as much detail as possible to help us assist you better.',
-              style: TextStyle(fontSize: 16, color: Colors.black54),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              maxLines: 6,
-              decoration: InputDecoration(
-                hintText: 'Type your question here...',
-                labelText: 'Your Question',
-                labelStyle: TextStyle(color: Colors.black54),
-                contentPadding: EdgeInsets.all(20),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: Color.fromARGB(255, 3, 190, 150),
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: Color.fromARGB(255, 3, 190, 150),
-                    width: 2,
-                  ),
+        child: Form(
+          key: formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Ask Your Question',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 3, 190, 150),
                 ),
               ),
-            ),
-            SizedBox(height: 20),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  // Add your publish logic here
+              SizedBox(height: 15),
+              Text(
+                'Please provide as much detail as possible to help us assist you better.',
+                style: TextStyle(fontSize: 16, color: Colors.black54),
+              ),
+              SizedBox(height: 20),
+              TextFormField(
+                controller: text,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'يرجى إدخال عنوان.';
+                  }
+                  return null;
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 3, 190, 150),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                maxLines: 6,
+                decoration: InputDecoration(
+                  hintText: 'Type your question here...',
+                  labelText: 'Your Question',
+                  labelStyle: TextStyle(color: Colors.black54),
+                  contentPadding: EdgeInsets.all(20),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: Color.fromARGB(255, 3, 190, 150),
+                    ),
                   ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 30,
-                    vertical: 15,
-                  ),
-                  child: Text(
-                    'Publish Question',
-                    style: TextStyle(fontSize: 18),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: Color.fromARGB(255, 3, 190, 150),
+                      width: 2,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+              SizedBox(height: 20),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (formKey.currentState!.validate()) {
+                      await addPost();
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 3, 190, 150),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 30,
+                      vertical: 15,
+                    ),
+                    child: Text(
+                      'Publish Question',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Color.fromARGB(255, 247, 247, 247),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

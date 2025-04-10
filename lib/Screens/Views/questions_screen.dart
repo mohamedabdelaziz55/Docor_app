@@ -3,36 +3,63 @@ import 'package:doctor_app/date/dummy_questions&&anser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import '../../constet.dart';
+import '../../crud.dart';
+import '../../main.dart';
+import '../../models/models_patient/model_date_json.dart';
 import '../Widgets/custom_questions.dart';
-import 'Dashboard_screen.dart';
 import 'ask_screen.dart';
 
-class QuestionsScreen extends StatelessWidget {
+class QuestionsScreen extends StatefulWidget {
   const QuestionsScreen({super.key});
+
+  @override
+  State<QuestionsScreen> createState() => _QuestionsScreenState();
+}
+
+class _QuestionsScreenState extends State<QuestionsScreen> {
+  Crud _crud = Crud();
+
+  Future<ModelDateJson> getView() async {
+    var response = await _crud.postRequest(linkView, {
+      "id": sp.getString("id"),
+    });
+    return ModelDateJson.fromJson(response);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              CustomCon(),
-              SearchTextField(text: "Search for a question..."),
-              SizedBox(height: 20),
-
-              ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: dummyQuestions.length,
-                itemBuilder: (context, index) {
-                  return CustomQuestions(modelQuestions: dummyQuestions[index]);
-                },
+      body: FutureBuilder<ModelDateJson>(
+        future: getView(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (snapshot.hasData && snapshot.data?.data != null) {
+            var ask = snapshot.data!.data!;
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  CustomCon(),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: ask.length,
+                    itemBuilder: (context, index) {
+                      var noteData = ask[index];
+                      return CustomQuestions(modelAsk: noteData);
+                    },
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            );
+          } else {
+            return Center(child: Text('No data available'));
+          }
+        },
       ),
     );
   }
@@ -104,3 +131,31 @@ class CustomCon extends StatelessWidget {
     );
   }
 }
+
+// class CustomQuestions extends StatelessWidget {
+//   final Data modelAsk;
+//
+//   const CustomQuestions({Key? key, required this.modelAsk}) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       padding: EdgeInsets.all(10),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Text(
+//             modelAsk.questionsText ?? 'No question available',
+//             style: TextStyle(fontSize: 16),
+//           ),
+//           SizedBox(height: 5),
+//           Text(
+//             'Posted on: ${modelAsk.postDate ?? 'Unknown date'}',
+//             style: TextStyle(color: Colors.grey),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
