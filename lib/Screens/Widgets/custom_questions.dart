@@ -18,19 +18,19 @@ class _CustomQuestionsState extends State<CustomQuestions> {
     final Duration difference = DateTime.now().difference(postDate);
 
     if (difference.inSeconds < 60) {
-      return "منذ ثوانٍ";
+      return "Just now";
     } else if (difference.inMinutes < 60) {
-      return "منذ ${difference.inMinutes} دقيقة";
+      return "Since ${difference.inMinutes} minute(s)";
     } else if (difference.inHours < 24) {
-      return "منذ ${difference.inHours} ساعة";
+      return "Since ${difference.inHours} hour(s)";
     } else if (difference.inDays < 7) {
-      return "منذ ${difference.inDays} يوم";
+      return "Since ${difference.inDays} day(s)";
     } else if (difference.inDays < 30) {
-      return "منذ ${difference.inDays ~/ 7} أسبوع";
+      return "Since ${difference.inDays ~/ 7} week(s)";
     } else if (difference.inDays < 365) {
-      return "منذ ${difference.inDays ~/ 30} شهر";
+      return "Since ${difference.inDays ~/ 30} month(s)";
     } else {
-      return "منذ ${difference.inDays ~/ 365} سنة";
+      return "Since ${difference.inDays ~/ 365} year(s)";
     }
   }
 
