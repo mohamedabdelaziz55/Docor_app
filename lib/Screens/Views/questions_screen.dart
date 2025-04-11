@@ -73,33 +73,41 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                           );
                         },
                         modelAsk: noteData,
-                        onTapDelete: () async {
-                          bool? confirmDelete = await showDialog<bool>(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text('تأكيد الحذف'),
-                                content: const Text('هل تريد حذف هذه الملاحظة؟'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.of(context).pop(false),
-                                    child: const Text('إلغاء'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () => Navigator.of(context).pop(true),
-                                    child: const Text('حذف'),
-                                  ),
-                                ],
+                          onTapDelete: () async {
+                            bool? confirmDelete = await showDialog<bool>(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text('تأكيد الحذف'),
+                                  content: const Text('هل تريد حذف هذه الملاحظة؟'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.of(context).pop(false),
+                                      child: const Text('إلغاء'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () => Navigator.of(context).pop(true),
+                                      child: const Text('حذف'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+
+                            if (confirmDelete == true) {
+                              await deleteNote(noteData.questionsId ?? '');
+
+                              // الرجوع لصفحة الأسئلة بعد الحذف
+                              Navigator.pushReplacement(
+                                context,
+                                PageTransition(
+                                  type: PageTransitionType.rightToLeft,
+                                  child: QuestionsScreen(),
+                                ),
                               );
-                            },
-                          );
-                          if (confirmDelete == true) {
-                            await deleteNote(noteData.questionsId ?? '');
-                            setState(() {
-                              ask.removeAt(index);
-                            });
+                            }
                           }
-                        },
+
                       );
                     },
                   );
@@ -181,3 +189,5 @@ class CustomCon extends StatelessWidget {
     );
   }
 }
+
+
