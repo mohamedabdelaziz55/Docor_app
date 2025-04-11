@@ -7,12 +7,10 @@ import 'package:page_transition/page_transition.dart';
 class AnserQuestionsScreen extends StatelessWidget {
   const AnserQuestionsScreen({
     super.key,
-    required this.modelQuestions,
-    required this.modelAnswer,
   });
 
-  final ModelQuestions modelQuestions;
-  final ModelAnswer modelAnswer;
+  // final ModelQuestions modelQuestions;
+  // final ModelAnswer modelAnswer;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +79,7 @@ class AnserQuestionsScreen extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            modelQuestions.ask,
+                            "dssdkf;",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -122,7 +120,7 @@ class AnserQuestionsScreen extends StatelessWidget {
                 ),
               ),
               Text(
-                modelAnswer.answer,
+                "modelAnswer.answer",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),

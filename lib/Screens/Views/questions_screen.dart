@@ -20,6 +20,7 @@ class QuestionsScreen extends StatefulWidget {
 class _QuestionsScreenState extends State<QuestionsScreen> {
   Crud _crud = Crud();
 
+  // جلب بيانات الأسئلة
   Future<ModelDateJson> getView() async {
     var response = await _crud.postRequest(linkView, {
       "id": sp.getString("id"),
@@ -27,15 +28,21 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
     return ModelDateJson.fromJson(response);
   }
 
+  // تعديل دالة الحذف لتسليم اسم المعامل المناسب "questions_id"
+  Future<void> deleteNote(String noteId) async {
+    var response = await _crud.postRequest(linkDelete, {"questions_id": noteId});
+    return response;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: FutureBuilder<ModelDateJson>(
         future: getView(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData && snapshot.data?.data != null) {
@@ -43,21 +50,52 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  CustomCon(),
+                  const CustomCon(),
                   ListView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: ask.length,
                     itemBuilder: (context, index) {
-                      var noteData = ask[index];
-                      return CustomQuestions(modelAsk: noteData);
+                      Data noteData = ask[index];
+                      return CustomQuestions(
+                        modelAsk: noteData,
+                        onTapDelete: () async {
+                          bool? confirmDelete = await showDialog<bool>(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('تأكيد الحذف'),
+                                content: const Text('هل تريد حذف هذه الملاحظة؟'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(false),
+                                    child: const Text('إلغاء'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(true),
+                                    child: const Text('حذف'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                          if (confirmDelete == true) {
+                            await deleteNote(noteData.questionsId ?? '');
+                            setState(() {
+                              ask.removeAt(index);
+                            });
+                          }
+                        },
+                      );
                     },
                   ),
                 ],
               ),
             );
           } else {
-            return Center(child: Text('No data available'));
+            return const Center(child: Text('No data available'));
           }
         },
       ),
@@ -73,7 +111,7 @@ class CustomCon extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: 270,
-      color: Color.fromARGB(255, 3, 190, 150),
+      color: const Color.fromARGB(255, 3, 190, 150),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -87,9 +125,9 @@ class CustomCon extends StatelessWidget {
                 ),
               );
             },
-            icon: Icon(CupertinoIcons.back, color: Colors.white, size: 24),
+            icon: const Icon(CupertinoIcons.back, color: Colors.white, size: 24),
           ),
-          SizedBox(height: 22),
+          const SizedBox(height: 22),
           Row(
             children: [
               Padding(
@@ -99,7 +137,7 @@ class CustomCon extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Do you have a medical\n question?',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -113,11 +151,11 @@ class CustomCon extends StatelessWidget {
                         context,
                         PageTransition(
                           type: PageTransitionType.leftToRight,
-                          child: AskScreen(),
+                          child: const AskScreen(),
                         ),
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       'Enter your question now',
                       style: TextStyle(color: Colors.black, fontSize: 18),
                     ),
@@ -131,31 +169,3 @@ class CustomCon extends StatelessWidget {
     );
   }
 }
-
-// class CustomQuestions extends StatelessWidget {
-//   final Data modelAsk;
-//
-//   const CustomQuestions({Key? key, required this.modelAsk}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       padding: EdgeInsets.all(10),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Text(
-//             modelAsk.questionsText ?? 'No question available',
-//             style: TextStyle(fontSize: 16),
-//           ),
-//           SizedBox(height: 5),
-//           Text(
-//             'Posted on: ${modelAsk.postDate ?? 'Unknown date'}',
-//             style: TextStyle(color: Colors.grey),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
