@@ -29,17 +29,31 @@ class Crud {
 
   postRequest(String uri, Map data) async {
     try {
-      var response = await http.post(Uri.parse(uri), body: data , headers: myheaders);
+      var response = await http.post(Uri.parse(uri), body: data, headers: myheaders);
+
+      print("Response status: ${response.statusCode}");
+      print("Response body: ${response.body}");
+
       if (response.statusCode == 200) {
-        var responseBody = jsonDecode(response.body); // عشان افك ال json
-        return responseBody;
+        // نحاول التأكد أن الرد فعلاً JSON
+        if (response.headers['content-type'] != null &&
+            response.headers['content-type']!.contains('application/json')) {
+          var responseBody = jsonDecode(response.body);
+          return responseBody;
+        } else {
+          print("Unexpected content-type: ${response.headers['content-type']}");
+          return null;
+        }
       } else {
-        print("err ${response.statusCode}");
+        print("Error: ${response.statusCode}");
+        return null;
       }
     } catch (e) {
-      print("errCatch${e}");
+      print("errCatchFormatException: $e");
+      return null;
     }
   }
+
 
 
   postRequestWithFile(String url, Map data, File file) async {

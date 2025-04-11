@@ -1,5 +1,5 @@
 import 'package:doctor_app/Screens/Views/Homepage.dart';
-import 'package:doctor_app/date/dummy_questions&&anser.dart';
+import 'package:doctor_app/Screens/Views/edit_ask_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
@@ -38,26 +38,40 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-      body: FutureBuilder<ModelDateJson>(
-        future: getView(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData && snapshot.data?.data != null) {
-            var ask = snapshot.data!.data!;
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  const CustomCon(),
-                  ListView.builder(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const CustomCon(),
+            FutureBuilder<ModelDateJson>(
+              future: getView(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (snapshot.hasData && snapshot.data?.data != null) {
+                  var ask = snapshot.data!.data!;
+                  if (ask.isEmpty) {
+                    return const Center(
+                        child: Text('No posts available',
+                            style: TextStyle(fontSize: 16)));
+                  }
+                  return ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: ask.length,
                     itemBuilder: (context, index) {
                       Data noteData = ask[index];
                       return CustomQuestions(
+                        onTapEdit: () {
+                          Navigator.pushReplacement(
+                            context,
+                            PageTransition(
+                              type: PageTransitionType.rightToLeft,
+                              child: EditAskScreen(post: noteData.toJson()), // تمرير بيانات السؤال
+                            ),
+                          );
+                        },
                         modelAsk: noteData,
                         onTapDelete: () async {
                           bool? confirmDelete = await showDialog<bool>(
@@ -68,13 +82,11 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                                 content: const Text('هل تريد حذف هذه الملاحظة؟'),
                                 actions: [
                                   TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(false),
+                                    onPressed: () => Navigator.of(context).pop(false),
                                     child: const Text('إلغاء'),
                                   ),
                                   TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(true),
+                                    onPressed: () => Navigator.of(context).pop(true),
                                     child: const Text('حذف'),
                                   ),
                                 ],
@@ -90,14 +102,14 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                         },
                       );
                     },
-                  ),
-                ],
-              ),
-            );
-          } else {
-            return const Center(child: Text('No data available'));
-          }
-        },
+                  );
+                } else {
+                  return const Center(child: Text('No data available'));
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

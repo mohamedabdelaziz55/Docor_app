@@ -6,3 +6,4 @@ const String linklogin = "$linkServerName/auth/login.php";
 const String linkAdd = "$linkServerName/questions/add.php";
 const String linkView = "$linkServerName/questions/select.php";
 const String linkDelete = "$linkServerName/questions/delete.php";
+const String linkEdit = "$linkServerName/questions/update.php";
