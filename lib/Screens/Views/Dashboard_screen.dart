@@ -9,6 +9,7 @@ import '../Widgets/banner.dart';
 import '../Widgets/listIcons.dart';
 import '../Widgets/list_doctor2.dart';
 import 'articlePage.dart';
+import 'articles_screen.dart';
 import 'doctor_details_screen.dart';
 import 'doctor_search.dart';
 import 'find_doctor.dart';
@@ -63,15 +64,18 @@ class Dashboard extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 0.06,
                 width: MediaQuery.of(context).size.width * 0.9,
                 decoration: BoxDecoration(),
-                child: SearchTextField(ontap: () {
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                      type: PageTransitionType.rightToLeft,
-                      child: find_doctor(),
-                    ),
-                  );
-                }, text: "Search doctor, drugs, articles...",),
+                child: SearchTextField(
+                  ontap: () {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.rightToLeft,
+                        child: find_doctor(),
+                      ),
+                    );
+                  },
+                  text: "Search doctor, drugs, articles...",
+                ),
               ),
             ),
             SizedBox(height: 20),
@@ -80,7 +84,19 @@ class Dashboard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 listIcons(Icon: "assets/icons/Doctor.png", text: "Doctor"),
-                listIcons(Icon: "assets/icons/appoint.png", text: "Articles"),
+                listIcons(
+                  Icon: "assets/icons/appoint.png",
+                  text: "Articles",
+                  ontap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.rightToLeft,
+                        child: ArticlesScreen(),
+                      ),
+                    );
+                  },
+                ),
                 listIcons(
                   Icon: "assets/icons/communication.png",
                   text: "Questions",
@@ -216,11 +232,11 @@ class Dashboard extends StatelessWidget {
 }
 
 class SearchTextField extends StatelessWidget {
-  const SearchTextField({
-    super.key, this.ontap, required this.text,
-  });
-final void Function()? ontap;
-final String text;
+  const SearchTextField({super.key, this.ontap, required this.text});
+
+  final void Function()? ontap;
+  final String text;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
