@@ -1,0 +1,83 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
+import '../../models/models_patient/model_doctors.dart';
+import '../../constet.dart';
+import '../../utils.dart';
+import 'articles_screen.dart';
+
+class ArticleDetailsScreen extends StatelessWidget {
+  final DataArtices dataArtices;
+
+  const ArticleDetailsScreen({Key? key, required this.dataArtices}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(onPressed: (){  Navigator.pushReplacement(
+          context,
+          PageTransition(
+            type: PageTransitionType.rightToLeft,
+            child: ArticlesScreen(),
+          ),
+        );}, icon:Icon(CupertinoIcons.back) ),
+        title: Text(dataArtices.titleArticles ?? 'مقالة'),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // صورة المقالة
+            FadeInImage(
+              placeholder: MemoryImage(kTransparentImage),
+              image: NetworkImage("$imageRoot/${dataArtices.imageArticles}"),
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: 250,
+            ),
+
+            // عنوان وتاريخ المقالة
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    dataArtices.titleArticles ?? '',
+                    style: const TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(Icons.schedule, size: 18, color: Colors.grey[600]),
+                      const SizedBox(width: 4),
+                      Text(
+                        timeAgo(dataArtices.articleDate ?? '2023-01-01T00:00:00'),
+                        style: TextStyle(color: Colors.grey[600]),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            // محتوى المقالة
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                dataArtices.articleText ?? 'لا يوجد محتوى.',
+                style: const TextStyle(fontSize: 18, height: 1.6),
+              ),
+            ),
+            const SizedBox(height: 30),
+          ],
+        ),
+      ),
+    );
+  }
+}

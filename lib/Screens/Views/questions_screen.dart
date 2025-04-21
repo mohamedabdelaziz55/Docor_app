@@ -27,9 +27,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
     });
     return ModelDateJson.fromJson(response);
   }
-
-  // تعديل دالة الحذف لتسليم اسم المعامل المناسب "questions_id"
-  Future<void> deleteNote(String noteId) async {
+ Future<void> deleteNote(String noteId) async {
     var response = await _crud.postRequest(linkDelete, {"questions_id": noteId});
     return response;
   }
@@ -39,84 +37,86 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const CustomCon(),
-            FutureBuilder<ModelDateJson>(
-              future: getView(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (snapshot.hasData && snapshot.data?.data != null) {
-                  var ask = snapshot.data!.data!;
-                  if (ask.isEmpty) {
-                    return const Center(
-                        child: Text('No posts available',
-                            style: TextStyle(fontSize: 16)));
-                  }
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: ask.length,
-                    itemBuilder: (context, index) {
-                      Data noteData = ask[index];
-                      return CustomQuestions(
-                        onTapEdit: () {
-                          Navigator.pushReplacement(
-                            context,
-                            PageTransition(
-                              type: PageTransitionType.rightToLeft,
-                              child: EditAskScreen(post: noteData.toJson()), // تمرير بيانات السؤال
-                            ),
-                          );
-                        },
-                        modelAsk: noteData,
-                          onTapDelete: () async {
-                            bool? confirmDelete = await showDialog<bool>(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text('تأكيد الحذف'),
-                                  content: const Text('هل تريد حذف هذه الملاحظة؟'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.of(context).pop(false),
-                                      child: const Text('إلغاء'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () => Navigator.of(context).pop(true),
-                                      child: const Text('حذف'),
-                                    ),
-                                  ],
-                                );
-                              },
+        child: SafeArea(
+          child: Column(
+            children: [
+              const CustomCon(),
+              FutureBuilder<ModelDateJson>(
+                future: getView(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (snapshot.hasData && snapshot.data?.data != null) {
+                    var ask = snapshot.data!.data!;
+                    if (ask.isEmpty) {
+                      return const Center(
+                          child: Text('No posts available',
+                              style: TextStyle(fontSize: 16)));
+                    }
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: ask.length,
+                      itemBuilder: (context, index) {
+                        Data noteData = ask[index];
+                        return CustomQuestions(
+                          onTapEdit: () {
+                            Navigator.pushReplacement(
+                              context,
+                              PageTransition(
+                                type: PageTransitionType.rightToLeft,
+                                child: EditAskScreen(post: noteData.toJson()), // تمرير بيانات السؤال
+                              ),
                             );
-
-                            if (confirmDelete == true) {
-                              await deleteNote(noteData.questionsId ?? '');
-
-                              // الرجوع لصفحة الأسئلة بعد الحذف
-                              Navigator.pushReplacement(
-                                context,
-                                PageTransition(
-                                  type: PageTransitionType.rightToLeft,
-                                  child: QuestionsScreen(),
-                                ),
+                          },
+                          modelAsk: noteData,
+                            onTapDelete: () async {
+                              bool? confirmDelete = await showDialog<bool>(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text('تأكيد الحذف'),
+                                    content: const Text('هل تريد حذف هذه الملاحظة؟'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.of(context).pop(false),
+                                        child: const Text('إلغاء'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => Navigator.of(context).pop(true),
+                                        child: const Text('حذف'),
+                                      ),
+                                    ],
+                                  );
+                                },
                               );
+          
+                              if (confirmDelete == true) {
+                                await deleteNote(noteData.questionsId ?? '');
+          
+                                // الرجوع لصفحة الأسئلة بعد الحذف
+                                Navigator.pushReplacement(
+                                  context,
+                                  PageTransition(
+                                    type: PageTransitionType.rightToLeft,
+                                    child: QuestionsScreen(),
+                                  ),
+                                );
+                              }
                             }
-                          }
-
-                      );
-                    },
-                  );
-                } else {
-                  return const Center(child: Text('No data available'));
-                }
-              },
-            ),
-          ],
+          
+                        );
+                      },
+                    );
+                  } else {
+                    return const Center(child: Text('No data available'));
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

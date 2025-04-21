@@ -46,6 +46,7 @@ dependencies:
   animated_bottom_navigation_bar: ^1.4.0
   shared_preferences: ^2.5.2
   flutter_image: ^4.1.12
+  get: ^4.7.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

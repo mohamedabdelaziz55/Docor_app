@@ -19,3 +19,47 @@ class ModelsDoctors {
     required this.star,
   });
 }
+
+class ArticesModel {
+  String? status;
+  List<DataArtices>? data;
+
+  ArticesModel({this.status, this.data});
+
+  ArticesModel.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    if (json['data'] != null) {
+      data = <DataArtices>[];
+      json['data'].forEach((v) {
+        data!.add(DataArtices.fromJson(v));
+      });
+    }
+  }
+}
+
+class DataArtices {
+  String? id;
+  String? writerName;
+  String? titleArticles;
+  String? articleText;
+  String? articleDate;
+  String? imageArticles;
+
+  DataArtices({
+    this.id,
+    this.writerName,
+    this.titleArticles,
+    this.articleText,
+    this.articleDate,
+    this.imageArticles,
+  });
+
+  DataArtices.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    writerName = json['writer_name'];
+    titleArticles = json['title_articles'];
+    articleText = json['article_text'];
+    articleDate = json['article_date'];
+    imageArticles = json['image_articles'];
+  }
+}

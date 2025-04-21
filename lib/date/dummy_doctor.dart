@@ -10,7 +10,7 @@ List<ModelsDoctors> dummyDoctorList = [
     star: 4.7,
     supText: 'Neurologist',
     about:
-        'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
+    'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
   ),
   ModelsDoctors(
     name: "Dr. Marcus Horizon",
@@ -20,7 +20,7 @@ List<ModelsDoctors> dummyDoctorList = [
     star: 4.7,
     supText: 'Neurologist',
     about:
-        'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
+    'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
   ),
   ModelsDoctors(
     name: "Dr. Marcus Horizon",
@@ -31,11 +31,11 @@ List<ModelsDoctors> dummyDoctorList = [
     supText: 'Neurologist',
 
     about:
-        'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
+    'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
   ),
   ModelsDoctors(
     about:
-        'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
+    'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
     name: "Dr. Marcus Horizon",
     image: "assets/icons/black-doctor.png",
     id: 4,
@@ -51,7 +51,7 @@ List<ModelsDoctors> dummyDoctorList = [
     star: 4.7,
     supText: 'Neurologist',
     about:
-        'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
+    'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
   ),
   ModelsDoctors(
     name: "Dr. Marcus Horizon",
@@ -61,7 +61,7 @@ List<ModelsDoctors> dummyDoctorList = [
     star: 4.7,
     supText: ' Neurologist ',
     about:
-        'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
+    'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
   ),
   ModelsDoctors(
     name: "Dr. Marcus Horizon",
@@ -71,7 +71,7 @@ List<ModelsDoctors> dummyDoctorList = [
     star: 4.7,
     supText: 'Neurologist',
     about:
-        'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
+    'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
   ),
   ModelsDoctors(
     name: "Dr. Marcus Horizon",
@@ -81,7 +81,7 @@ List<ModelsDoctors> dummyDoctorList = [
     star: 4.7,
     supText: 'Neurologist',
     about:
-        'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
+    'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
   ),
   ModelsDoctors(
     name: "Dr. Marcus Horizon",
@@ -91,7 +91,7 @@ List<ModelsDoctors> dummyDoctorList = [
     star: 4.7,
     supText: 'Neurologis',
     about:
-        'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
+    'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
   ),
   ModelsDoctors(
     name: "Dr. Marcus Horizon",
@@ -101,7 +101,7 @@ List<ModelsDoctors> dummyDoctorList = [
     star: 4.7,
     supText: 'Neurologis',
     about:
-        'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
+    'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
   ),
   ModelsDoctors(
     name: "Dr. Marcus Horizon",
@@ -111,7 +111,7 @@ List<ModelsDoctors> dummyDoctorList = [
     supText: 'Neurologis',
     star: 4.7,
     about:
-        'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
+    'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
   ),
   ModelsDoctors(
     name: "Dr. Marcus Horizon",
@@ -121,6 +121,6 @@ List<ModelsDoctors> dummyDoctorList = [
     star: 4.7,
     supText: 'Neurologis',
     about:
-        'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
+    'jsfdklfjasoidfjoidsjagfoioshadgoifhsdfoihsadoifhsaoidhfoisadhfoisadfoiasdiovhasdofihasojfhvoisdhvfjksdnvio;idshvljzxdjkhviozdsvjkzxdvjhkjzxfvjzxhoi',
   ),
 ];

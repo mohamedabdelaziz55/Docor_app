@@ -4,10 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
+import '../../models/models_patient/model_date_json.dart';
+
 class AnserQuestionsScreen extends StatelessWidget {
   const AnserQuestionsScreen({
-    super.key,
+    super.key, required this.modelAsk,
   });
+  final Data modelAsk;
 
   // final ModelQuestions modelQuestions;
   // final ModelAnswer modelAnswer;
@@ -79,7 +82,7 @@ class AnserQuestionsScreen extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "dssdkf;",
+                            "${modelAsk.questionsText}",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,

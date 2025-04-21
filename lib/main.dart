@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-
 import 'Screens/Login-Signup/login.dart';
 import 'Screens/Login-Signup/register.dart';
 import 'Screens/Views/Homepage.dart';
-import 'Screens/Views/Homepage.dart';
-import 'Screens/Views/Screen1.dart';
+
 
 late SharedPreferences sp;
 void main()async {
