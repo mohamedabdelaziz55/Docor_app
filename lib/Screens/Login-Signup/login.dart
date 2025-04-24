@@ -1,6 +1,9 @@
+import 'dart:convert';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:doctor_app/Screens/Login-Signup/register.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 import 'package:page_transition/page_transition.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import '../../constet.dart';
@@ -11,6 +14,7 @@ import '../Widgets/Auth_text_field.dart';
 import '../Widgets/auth_social_login.dart';
 import 'forgot_pass.dart';
 import 'login_signup.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class login extends StatefulWidget {
   const login({super.key});
@@ -217,7 +221,7 @@ class _loginState extends State<login> {
                           context,
                           PageTransition(
                             type: PageTransitionType.rightToLeft,
-                            child: Register(),
+                            child: RegisterStep1(),
                           ),
                         );
                       },
@@ -255,16 +259,55 @@ class _loginState extends State<login> {
                 auth_social_logins(
                   logo: "assets/images/google.png",
                   text: "Sign in with Google",
-                ),
-                const SizedBox(height: 20),
-                auth_social_logins(
-                  logo: "assets/images/apple.png",
-                  text: "Sign in Apple",
+                  onTap: () async {
+                    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+                    if (googleUser != null) {
+                      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+                      final String? idToken = googleAuth.idToken;
+
+                      if (idToken != null) {
+                        // إرسال idToken إلى واجهة PHP الخلفية للتحقق
+                        final response = await http.post(
+                          Uri.parse('https://yourdomain.com/api/google_login.php'),
+                          body: {'id_token': idToken},
+                        );
+
+                        final data = jsonDecode(response.body);
+                        if (data['status'] == 'success') {
+                          // حفظ بيانات المستخدم وتوجيهه إلى الصفحة الرئيسية
+                        } else {
+                          // عرض رسالة خطأ
+                        }
+                      }
+                    }
+                  },
                 ),
                 const SizedBox(height: 20),
                 auth_social_logins(
                   logo: "assets/images/facebook.png",
-                  text: "Sign in facebook",
+                  text: "Sign in with Facebook",
+                  onTap: () async {
+                    final LoginResult result = await FacebookAuth.instance.login();
+                    if (result.status == LoginStatus.success) {
+                      final AccessToken accessToken = result.accessToken!;
+                      final String token = accessToken.tokenString;
+
+                      // إرسال token إلى واجهة PHP الخلفية للتحقق
+                      final response = await http.post(
+                        Uri.parse('https://yourdomain.com/api/facebook_login.php'),
+                        body: {'access_token': token},
+                      );
+
+                      final data = jsonDecode(response.body);
+                      if (data['status'] == 'success') {
+                        // حفظ بيانات المستخدم وتوجيهه إلى الصفحة الرئيسية
+                      } else {
+                        // عرض رسالة خطأ
+                      }
+                    } else {
+                      // عرض رسالة خطأ
+                    }
+                  },
                 ),
               ],
             ),
@@ -274,3 +317,4 @@ class _loginState extends State<login> {
     );
   }
 }
+

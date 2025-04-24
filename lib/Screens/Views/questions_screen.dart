@@ -20,14 +20,14 @@ class QuestionsScreen extends StatefulWidget {
 class _QuestionsScreenState extends State<QuestionsScreen> {
   Crud _crud = Crud();
 
-  // جلب بيانات الأسئلة
   Future<ModelDateJson> getView() async {
     var response = await _crud.postRequest(linkView, {
       "id": sp.getString("id"),
     });
     return ModelDateJson.fromJson(response);
   }
- Future<void> deleteNote(String noteId) async {
+
+  Future<void> deleteNote(String noteId) async {
     var response = await _crud.postRequest(linkDelete, {"questions_id": noteId});
     return response;
   }
@@ -36,42 +36,47 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Column(
-            children: [
-              const CustomCon(),
-              FutureBuilder<ModelDateJson>(
-                future: getView(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else if (snapshot.hasData && snapshot.data?.data != null) {
-                    var ask = snapshot.data!.data!;
-                    if (ask.isEmpty) {
-                      return const Center(
-                          child: Text('No posts available',
-                              style: TextStyle(fontSize: 16)));
-                    }
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: ask.length,
-                      itemBuilder: (context, index) {
-                        Data noteData = ask[index];
-                        return CustomQuestions(
-                          onTapEdit: () {
-                            Navigator.pushReplacement(
-                              context,
-                              PageTransition(
-                                type: PageTransitionType.rightToLeft,
-                                child: EditAskScreen(post: noteData.toJson()), // تمرير بيانات السؤال
-                              ),
-                            );
-                          },
-                          modelAsk: noteData,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          setState(() {});
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: SafeArea(
+            child: Column(
+              children: [
+                const CustomCon(),
+                FutureBuilder<ModelDateJson>(
+                  future: getView(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (snapshot.hasData && snapshot.data?.data != null) {
+                      var ask = snapshot.data!.data!;
+                      if (ask.isEmpty) {
+                        return const Center(
+                          child: Text('No posts available', style: TextStyle(fontSize: 16)),
+                        );
+                      }
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: ask.length,
+                        itemBuilder: (context, index) {
+                          Data noteData = ask[index];
+                          return CustomQuestions(
+                            onTapEdit: () {
+                              Navigator.pushReplacement(
+                                context,
+                                PageTransition(
+                                  type: PageTransitionType.rightToLeft,
+                                  child: EditAskScreen(post: noteData.toJson()),
+                                ),
+                              );
+                            },
+                            modelAsk: noteData,
                             onTapDelete: () async {
                               bool? confirmDelete = await showDialog<bool>(
                                 context: context,
@@ -92,30 +97,22 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                                   );
                                 },
                               );
-          
+
                               if (confirmDelete == true) {
                                 await deleteNote(noteData.questionsId ?? '');
-          
-                                // الرجوع لصفحة الأسئلة بعد الحذف
-                                Navigator.pushReplacement(
-                                  context,
-                                  PageTransition(
-                                    type: PageTransitionType.rightToLeft,
-                                    child: QuestionsScreen(),
-                                  ),
-                                );
+                                setState(() {}); // إعادة تحميل البيانات بعد الحذف
                               }
-                            }
-          
-                        );
-                      },
-                    );
-                  } else {
-                    return const Center(child: Text('No data available'));
-                  }
-                },
-              ),
-            ],
+                            },
+                          );
+                        },
+                      );
+                    } else {
+                      return const Center(child: Text('No data available'));
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -189,5 +186,3 @@ class CustomCon extends StatelessWidget {
     );
   }
 }
-
-

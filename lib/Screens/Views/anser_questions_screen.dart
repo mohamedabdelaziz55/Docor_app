@@ -1,5 +1,4 @@
 import 'package:doctor_app/Screens/Views/questions_screen.dart';
-import 'package:doctor_app/models/models_patient/model_questions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';

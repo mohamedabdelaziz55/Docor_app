@@ -107,7 +107,7 @@ class _login_signupState extends State<login_signup> {
               Navigator.pushReplacement(
                   context,
                   PageTransition(
-                      type: PageTransitionType.rightToLeft, child: Register()));
+                      type: PageTransitionType.rightToLeft, child: RegisterStep1()));
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Color.fromARGB(255, 255, 255, 255),

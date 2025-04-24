@@ -7,7 +7,6 @@ import '../../crud.dart';
 import '../../main.dart';
 import '../../models/models_patient/model_doctors.dart';
 import '../Widgets/custom_card_articles.dart';
-import 'Dashboard_screen.dart';
 
 Uint8List kTransparentImage = Uint8List.fromList([
   137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 68, 65, 84, 8,
@@ -50,29 +49,34 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
           icon: Icon(Icons.arrow_back_ios),
         ),
       ),
-      body: FutureBuilder<ArticesModel>(
-        future: getView(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData && snapshot.data!.data != null) {
-            var notes = snapshot.data!.data!;
-            return ListView.builder(
-              itemCount: notes.length,
-              itemBuilder: (context, index) {
-                var noteData = notes[index];
-                return Padding(
-                  padding: const EdgeInsets.all(14.0),
-                  child: CustomCardArticles(dataM: noteData),
-                );
-              },
-            );
-          } else {
-            return Center(child: Text('No data available'));
-          }
-        },
+      body: RefreshIndicator(
+        onRefresh: () async{ setState(() {
+
+        }); },
+        child: FutureBuilder<ArticesModel>(
+          future: getView(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (snapshot.hasData && snapshot.data!.data != null) {
+              var notes = snapshot.data!.data!;
+              return ListView.builder(
+                itemCount: notes.length,
+                itemBuilder: (context, index) {
+                  var noteData = notes[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: CustomCardArticles(dataM: noteData),
+                  );
+                },
+              );
+            } else {
+              return Center(child: Text('No data available'));
+            }
+          },
+        ),
       ),
     );
   }

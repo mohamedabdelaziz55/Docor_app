@@ -66,7 +66,11 @@ class _TabBarExampleState extends State<message_tab_all>
                   context,
                   PageTransition(
                       type: PageTransitionType.bottomToTop,
-                      child: chat_screen()));
+                    child: ChatScreen(
+                      currentUserId: 1, // ID المستخدم الحالي (ممكن تجيبه من SharedPreferences)
+                      receiverId: 2,    // ID الدكتور اللي هتكلمه
+                      receiverName: "Dr. Marcus Horizon",
+                    ),));
             },
             child: message_all_widget(
               image: "assets/icons/male-doctor.png",

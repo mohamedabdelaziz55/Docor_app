@@ -30,6 +30,8 @@ final String? Function(String?)? validator;
                   horizontal: 10,
                 ),
                 child: Container(
+                  width: 22,
+                  height: 22,
                   child: Image.asset(icon),
                 ),
               ),

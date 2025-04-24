@@ -25,7 +25,7 @@ class Medics extends StatelessWidget {
     routes: {
       login.id:(context)=>login(),
       Homepage.id:(context)=>Homepage(),
-      Register.id:(context)=>Register(),
+      RegisterStep1.id:(context)=>RegisterStep1(),
 
     },
       );
