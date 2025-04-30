@@ -36,9 +36,9 @@ class ArticesModel {
     }
   }
 }
-
 class DataArtices {
   String? id;
+  String? docId; // ← doc_id الجديد
   String? writerName;
   String? titleArticles;
   String? articleText;
@@ -47,6 +47,7 @@ class DataArtices {
 
   DataArtices({
     this.id,
+    this.docId,
     this.writerName,
     this.titleArticles,
     this.articleText,
@@ -56,6 +57,7 @@ class DataArtices {
 
   DataArtices.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    docId = json['doc_id']; // ← لازم تكون مطابقة لاسم الحقل في الـ JSON
     writerName = json['writer_name'];
     titleArticles = json['title_articles'];
     articleText = json['article_text'];

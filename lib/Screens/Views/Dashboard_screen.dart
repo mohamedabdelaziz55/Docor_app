@@ -70,7 +70,7 @@ class Dashboard extends StatelessWidget {
                       context,
                       PageTransition(
                         type: PageTransitionType.rightToLeft,
-                        child: find_doctor(),
+                        child: FindDoctor(),
                       ),
                     );
                   },

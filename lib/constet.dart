@@ -13,6 +13,9 @@ const String linkDelete = "$linkServerName/questions/delete.php";
 const String linkEdit = "$linkServerName/questions/update.php";
 //Artices
 const String linkViewArtices = "$linkServerName/articles/select.php";
+const String linkAddArtices = "$linkServerName/articles/add.php";
+const String linkDeleteArtices = "$linkServerName/articles/delete.php";
+const String linkUpdateArtices = "$linkServerName/articles/update.php";
 //message
 const String getMessage = "$linkServerName/message/get_messages.php";
 const String sendMessage = "$linkServerName/message/send_messages.php";

@@ -8,8 +8,8 @@ import '../Widgets/listIcons.dart';
 import 'doctor_details_screen.dart';
 
 
-class find_doctor extends StatelessWidget {
-   find_doctor({super.key});
+class FindDoctor extends StatelessWidget {
+   FindDoctor({super.key});
   ModelsDoctors? modlesDoctors;
   @override
   Widget build(BuildContext context) {
