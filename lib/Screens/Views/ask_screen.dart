@@ -18,7 +18,7 @@ class _AskScreenState extends State<AskScreen> {
   final TextEditingController text = TextEditingController();
   final Crud _crud = Crud();
   Future<void> addPost() async {
-    final userId = sp.getString("id");
+    final userId =  sp.getString("id");
     print("User ID: $userId");
     if (userId == null || text.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(

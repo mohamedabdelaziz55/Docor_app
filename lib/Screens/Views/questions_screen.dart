@@ -22,7 +22,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
 
   Future<ModelDateJson> getView() async {
     var response = await _crud.postRequest(linkView, {
-      "id": sp.getString("id"),
+      "id":  sp.getString("id"),
     });
     return ModelDateJson.fromJson(response);
   }

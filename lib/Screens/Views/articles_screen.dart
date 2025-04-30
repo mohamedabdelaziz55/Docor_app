@@ -1,7 +1,6 @@
 import 'package:doctor_app/Screens/Views/Homepage.dart';
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
-
 import '../../constet.dart';
 import '../../crud.dart';
 import '../../main.dart';
@@ -26,7 +25,7 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
 
   Future<ArticesModel> getView() async {
     var response = await _crud.postRequest(linkViewArtices, {
-      "id": sp.getString("id"),
+      "id":  sp.getString("id"),
     });
     return ArticesModel.fromJson(response);
   }

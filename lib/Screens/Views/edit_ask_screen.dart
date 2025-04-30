@@ -2,7 +2,6 @@ import 'package:doctor_app/Screens/Views/questions_screen.dart';
 import 'package:doctor_app/crud.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-
 import '../../constet.dart';
 import '../../main.dart';
 
@@ -20,7 +19,7 @@ class _EditAskScreenState extends State<EditAskScreen> {
   final Crud _crud = Crud();
 
   Future<void> editPost() async {
-    final userId = sp.getString("id");
+    final userId =  sp.getString("id");
     final postId = widget.post != null ? widget.post['questions_id'].toString() : null;
     print("User ID: $userId | Post ID: $postId");
 

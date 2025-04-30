@@ -8,6 +8,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import '../../constet.dart';
 import '../../crud.dart';
+import '../../doctor/Login-Signup/login_doc.dart';
 import '../../main.dart';
 import '../Views/Homepage.dart';
 import '../Widgets/Auth_text_field.dart';
@@ -53,17 +54,21 @@ class _loginState extends State<login> {
       print("استجابة السيرفر: $response");
 
       if (response['status'] == "success") {
-        await sp.setString("id", response['data']['id'].toString());
-        await sp.setString("name", response['data']['name']);
-        await sp.setString("email", response['data']['email']);
-
-        print("Saved ID: ${sp.getString("id")}");
+        await  sp.setString("id", response['data']['id'].toString());
+        await  sp.setString("name", response['data']['name']);
+        await  sp.setString("email", response['data']['email']);
+        await  sp.setString("number", response['data']['number']);
+        await  sp.setString("age", response['data']['age']);
+        await  sp.setString("address", response['data']['address']);
+        await  sp.setString("gender", response['data']['gender']);
+        await  sp.setString("profile_image", response['data']['profile_image']);
 
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => Homepage()),
         );
-      } else {
+      }
+      else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("فشل تسجيل الدخول")),
         );
@@ -116,23 +121,26 @@ class _loginState extends State<login> {
                 const SizedBox(height: 40),
                 //Text field Login import from Auth_text_field widget
                 Auth_text_field(
+                  controller: email,
+                  text: "Enter your email",
+                  icon: "assets/icons/email.png",
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "يرجى إدخال البريد الإلكتروني";
                     }
-                    // التحقق من صحة البريد الإلكتروني باستخدام Regex
+                    // التحقق من صحة البريد الإلكتروني باستخدام تعبير منتظم (Regex)
                     if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
                       return "يرجى إدخال بريد إلكتروني صالح";
                     }
-                    return null; // ✅ لا يوجد خطأ
+                    return null; // ✅ البيانات سليمة
                   },
-                  controller: email,
-                  text: "Enter your email",
-                  icon: "assets/icons/email.png",
                 ),
-                const SizedBox(height: 5),
-        
+                const SizedBox(height: 10),
+
                 Auth_text_field(
+                  controller: password,
+                  text: "Enter your password",
+                  icon: "assets/icons/lock.png",
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "يرجى إدخال كلمة المرور";
@@ -140,12 +148,11 @@ class _loginState extends State<login> {
                     if (value.length < 6) {
                       return "يجب أن تكون كلمة المرور على الأقل 6 أحرف";
                     }
-                    return null;
+                    return null; // ✅ البيانات سليمة
                   },
-                  controller: password,
-                  text: "Enter your password",
-                  icon: "assets/icons/lock.png",
                 ),
+                const SizedBox(height: 10),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -235,8 +242,40 @@ class _loginState extends State<login> {
                       ),
                     ),
                   ],
+                ),                 SizedBox(height: 15),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Want to login as a doctor? ",
+                      style: GoogleFonts.poppins(
+                        fontSize: 15.sp,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            type: PageTransitionType.rightToLeft,
+                            child: login_Doc(), // هنا خلي بالك تغير اسم الشاشة حسب اللي عندك
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Login here",
+                        style: GoogleFonts.poppins(
+                          fontSize: 15.sp,
+                          color: const Color.fromARGB(255, 3, 190, 150),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 30),
+
+                 SizedBox(height: 30),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -266,7 +305,6 @@ class _loginState extends State<login> {
                       final String? idToken = googleAuth.idToken;
 
                       if (idToken != null) {
-                        // إرسال idToken إلى واجهة PHP الخلفية للتحقق
                         final response = await http.post(
                           Uri.parse('https://yourdomain.com/api/google_login.php'),
                           body: {'id_token': idToken},

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class on_board2 extends StatelessWidget {
-  const on_board2({super.key});
+class on_board4 extends StatelessWidget {
+  const on_board4({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class on_board2 extends StatelessWidget {
               image: DecorationImage(
                   alignment: Alignment.bottomCenter,
                   image: AssetImage(
-                    "assets/images/doctor2.png",
+                    "assets/images/doctor4.png",
                   ),
                   filterQuality: FilterQuality.high)),
         ),
@@ -46,11 +46,11 @@ class on_board2 extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(25),
                   child: Text(
-                    "Direct medical consultations with doctors through instant chat and calls",
+                    "No need to wait in clinics. Contact our best doctors.",
                     style: GoogleFonts.inter(
                         fontSize: 17.sp,
                         fontWeight: FontWeight.bold,
-                        color: const Color.fromARGB(255, 37, 37, 37)),
+                        color: Color.fromARGB(255, 37, 37, 37)),
                   ),
                 ),
               )

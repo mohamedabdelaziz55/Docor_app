@@ -6,7 +6,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 class on_board1 extends StatelessWidget {
   const on_board1({super.key});
-
+  static const String id = 'onBoard1';
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -48,9 +48,9 @@ class on_board1 extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(25),
                   child: Text(
-                    "Consult only with a doctor\nyou trust",
+                    "Healthcare services with different subscription packages to suit your needs",
                     style: GoogleFonts.inter(
-                        fontSize: 18.sp,
+                        fontSize: 17.sp,
                         fontWeight: FontWeight.bold,
                         color: const Color.fromARGB(255, 37, 37, 37)),
                   ),

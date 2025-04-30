@@ -7,7 +7,7 @@ class profile_list extends StatelessWidget {
   final String image;
   final Color color;
 final void Function()? ontap;
-  profile_list({required this.image, required this.title, required this.color, this.ontap});
+  profile_list({required this.image, required this.title, required this.color, this.ontap,});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ final void Function()? ontap;
                     child: Text(
                       title,
                       style: GoogleFonts.inter(
-                          fontSize: 17.sp,
+                          fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
                           color: color),
                     ),
@@ -54,7 +54,7 @@ final void Function()? ontap;
                     height: MediaQuery.of(context).size.height * 0.06,
                     width: MediaQuery.of(context).size.width * 0.1100,
                     decoration: const BoxDecoration(),
-                    child: Image.asset("assets/icons/forward.png")),
+                    ),
               ),
             ]),
           ),
