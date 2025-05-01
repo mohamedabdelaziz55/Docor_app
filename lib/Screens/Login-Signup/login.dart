@@ -218,7 +218,7 @@ class _loginState extends State<login> {
                     Text(
                       "Don't have an account? ",
                       style: GoogleFonts.poppins(
-                        fontSize: 15.sp,
+                        fontSize: 13.sp,
                         color: Colors.black87,
                       ),
                     ),
@@ -235,7 +235,7 @@ class _loginState extends State<login> {
                       child: Text(
                         "Sign Up",
                         style: GoogleFonts.poppins(
-                          fontSize: 15.sp,
+                          fontSize: 13.sp,
                           color: const Color.fromARGB(255, 3, 190, 150),
                           fontWeight: FontWeight.bold,
                         ),
@@ -249,7 +249,7 @@ class _loginState extends State<login> {
                     Text(
                       "Want to login as a doctor? ",
                       style: GoogleFonts.poppins(
-                        fontSize: 15.sp,
+                        fontSize: 13.sp,
                         color: Colors.black87,
                       ),
                     ),
@@ -264,9 +264,9 @@ class _loginState extends State<login> {
                         );
                       },
                       child: Text(
-                        "Login here",
+                        "Login",
                         style: GoogleFonts.poppins(
-                          fontSize: 15.sp,
+                          fontSize: 13.sp,
                           color: const Color.fromARGB(255, 3, 190, 150),
                           fontWeight: FontWeight.bold,
                         ),

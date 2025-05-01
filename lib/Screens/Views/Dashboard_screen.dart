@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import '../Widgets/article.dart';
 import '../Widgets/banner.dart';
 import '../Widgets/listIcons.dart';
 import '../Widgets/list_doctor2.dart';
-import 'articlePage.dart';
 import 'articles_screen.dart';
 import 'doctor_details_screen.dart';
 import 'doctor_search.dart';
@@ -180,50 +178,7 @@ class Dashboard extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Health article",
-                    style: GoogleFonts.inter(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w700,
-                      color: Color.fromARGB(255, 46, 46, 46),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacement(
-                        context,
-                        PageTransition(
-                          type: PageTransitionType.rightToLeft,
-                          child: articlePage(),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      "See all",
-                      style: GoogleFonts.inter(
-                        fontSize: 16.sp,
-                        color: const Color.fromARGB(255, 3, 190, 150),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 10),
-            // Article banner here import from widget>article
-            article(
-              image: "assets/images/article1.png",
-              dateText: "Jun 10, 2021 ",
-              duration: "5min read",
-              mainText:
-                  "The 25 Healthiest Fruits You Can Eat,\nAccording to a Nutritionist",
-            ),
+
           ],
         ),
       ),

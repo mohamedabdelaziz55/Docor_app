@@ -35,6 +35,9 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+      automaticallyImplyLeading: true,
+      ),
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: RefreshIndicator(
         onRefresh: () async {

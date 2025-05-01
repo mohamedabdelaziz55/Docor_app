@@ -17,7 +17,7 @@ class list_doctor1 extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(6.0),
         child: Container(
-          height: 120,
+          height: 100,
           // width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),

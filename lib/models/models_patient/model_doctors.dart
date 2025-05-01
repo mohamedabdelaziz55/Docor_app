@@ -65,3 +65,34 @@ class DataArtices {
     imageArticles = json['image_articles'];
   }
 }
+class CommentModel {
+  final String comId;
+  final String comText;
+  final String comDate;
+  final String docId;
+  final String docName;
+  final String docProfile;
+  final String askId;
+
+  CommentModel({
+    required this.comId,
+    required this.comText,
+    required this.comDate,
+    required this.docId,
+    required this.docName,
+    required this.docProfile,
+    required this.askId,
+  });
+
+  factory CommentModel.fromJson(Map<String, dynamic> json) {
+    return CommentModel(
+      comId: json['com_id'],
+      comText: json['com_text'],
+      comDate: json['com_date'],
+      docId: json['doc_id'],
+      docName: json['doc_name'],
+      docProfile: json['doc_profile'],
+      askId: json['ask_id'],
+    );
+  }
+}

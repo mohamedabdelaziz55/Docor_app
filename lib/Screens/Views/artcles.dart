@@ -1,3 +1,4 @@
+import 'package:doctor_app/doctor/ViewsDoc/HomepageDoc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
@@ -19,7 +20,7 @@ class ArticleDetailsScreen extends StatelessWidget {
           context,
           PageTransition(
             type: PageTransitionType.rightToLeft,
-            child: ArticlesScreen(),
+            child: HomepageDoc(),
           ),
         );}, icon:Icon(CupertinoIcons.back) ),
         title: Text(dataArtices.titleArticles ?? 'مقالة'),
