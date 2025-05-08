@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class article extends StatelessWidget {
+class ArticleController extends GetxController {
+  // Here you can manage any variables or actions needed for the screen
+}
+
+class Article extends StatelessWidget {
   final String mainText;
   final String dateText;
   final String duration;
   final String image;
 
-  article({
+  Article({
     required this.mainText,
     required this.dateText,
     required this.duration,
@@ -17,6 +22,8 @@ class article extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ArticleController controller = Get.put(ArticleController());
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: Container(
@@ -27,8 +34,7 @@ class article extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: const Color.fromARGB(255, 231, 231, 231)),
         ),
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           const SizedBox(
             width: 5,
           ),
@@ -43,8 +49,7 @@ class article extends StatelessWidget {
           Container(
             height: MediaQuery.of(context).size.height * 0.09,
             width: MediaQuery.of(context).size.width * 0.5,
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
                 mainText,
                 style: GoogleFonts.poppins(

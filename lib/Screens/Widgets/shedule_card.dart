@@ -1,43 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:get/get.dart';
 
-class shedule_card extends StatelessWidget {
+class ScheduleCardController extends GetxController {}
+
+class ScheduleCard extends StatelessWidget {
   final String mainText;
   final String subText;
   final String image;
   final String date;
   final String time;
-  final String confirmation;
+  final String? confirmation;
 
-  shedule_card(
-      {required this.mainText,
-      required this.subText,
-      required this.date,
-      required this.confirmation,
-      required this.time,
-      required this.image});
+  ScheduleCard({
+    required this.mainText,
+    required this.subText,
+    required this.date,
+    this.confirmation,
+    required this.time,
+    required this.image,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final ScheduleCardController controller = Get.put(ScheduleCardController());
+
     return Center(
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.22,
-        width: MediaQuery.of(context).size.width * 0.9,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.black12),
-        ),
-        child: Column(children: [
-          Row(
+      child: SingleChildScrollView( // حل المشكلة هنا
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 2.h),
+          padding: EdgeInsets.all(2.h),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.black12),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                height: MediaQuery.of(context).size.height * 0.07,
-                width: MediaQuery.of(context).size.width * 0.6,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
@@ -52,129 +57,97 @@ class shedule_card extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                               color: const Color.fromARGB(255, 99, 99, 99)),
                         ),
-                      ]),
-                ),
+                      ],
+                    ),
+                  ),
+                  ClipOval(
+                    child: Image.asset(
+                      image,
+                      height: 7.h,
+                      width: 7.h,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  height: MediaQuery.of(context).size.height * 0.07,
-                  width: MediaQuery.of(context).size.width * 0.2,
-                  decoration: BoxDecoration(
-                      color: Colors.blue,
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                          image: AssetImage(image),
-                          filterQuality: FilterQuality.high,
-                          fit: BoxFit.cover)),
-                ),
-              )
+              SizedBox(height: 1.h),
+              Row(
+                children: [
+                  Image.asset("assets/icons/callender2.png", height: 3.h),
+                  SizedBox(width: 1.w),
+                  Text(
+                    date,
+                    style: GoogleFonts.poppins(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w600,
+                        color: const Color.fromARGB(255, 99, 99, 99)),
+                  ),
+                  SizedBox(width: 3.w),
+                  Image.asset("assets/icons/watch.png", height: 3.h),
+                  SizedBox(width: 1.w),
+                  Text(
+                    time,
+                    style: GoogleFonts.poppins(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w600,
+                        color: const Color.fromARGB(255, 99, 99, 99)),
+                  ),
+                  SizedBox(width: 3.w),
+                  Image.asset("assets/icons/elips.png", height: 3.h),
+                  SizedBox(width: 1.w),
+                  Text(
+                    confirmation ?? "",
+                    style: GoogleFonts.poppins(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w600,
+                        color: const Color.fromARGB(255, 99, 99, 99)),
+                  ),
+                ],
+              ),
+              SizedBox(height: 2.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 5.h,
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 232, 233, 233),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Cancel",
+                        style: GoogleFonts.poppins(
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Color.fromARGB(255, 61, 61, 61)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 4.w),
+                  Expanded(
+                    child: Container(
+                      height: 5.h,
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 4, 190, 144),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Reschedule",
+                        style: GoogleFonts.poppins(
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
-          Container(
-            height: MediaQuery.of(context).size.height * 0.03,
-            width: MediaQuery.of(context).size.width * 0.8500,
-            child: Row(children: [
-              Container(
-                height: MediaQuery.of(context).size.height * 0.03,
-                width: MediaQuery.of(context).size.width * 0.07,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/icons/callender2.png"),
-                    filterQuality: FilterQuality.high,
-                  ),
-                ),
-              ),
-              Text(
-                date,
-                style: GoogleFonts.poppins(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w600,
-                    color: const Color.fromARGB(255, 99, 99, 99)),
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.03,
-                width: MediaQuery.of(context).size.width * 0.07,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/icons/watch.png"),
-                    filterQuality: FilterQuality.high,
-                  ),
-                ),
-              ),
-              Text(
-                time,
-                style: GoogleFonts.poppins(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w600,
-                    color: const Color.fromARGB(255, 99, 99, 99)),
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.03,
-                width: MediaQuery.of(context).size.width * 0.07,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/icons/elips.png"),
-                    filterQuality: FilterQuality.high,
-                  ),
-                ),
-              ),
-              Text(
-                confirmation,
-                style: GoogleFonts.poppins(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w600,
-                    color: const Color.fromARGB(255, 99, 99, 99)),
-              ),
-            ]),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.04500,
-                  width: MediaQuery.of(context).size.width * 0.3800,
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 232, 233, 233),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Cancel",
-                          style: GoogleFonts.poppins(
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.w600,
-                              color: Color.fromARGB(255, 61, 61, 61)),
-                        ),
-                      ]),
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.04500,
-                  width: MediaQuery.of(context).size.width * 0.3800,
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 4, 190, 144),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Reschedule",
-                          style: GoogleFonts.poppins(
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.w600,
-                              color: Color.fromARGB(255, 252, 252, 252)),
-                        ),
-                      ]),
-                ),
-              ],
-            ),
-          )
-        ]),
+        ),
       ),
     );
   }

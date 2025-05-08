@@ -3,15 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import '../../Screens/Widgets/list_doctor1.dart';
+import 'package:get/get.dart';
+import '../../Screens/Views/doctor_details_screen.dart';
 import '../../date/dummy_doctor.dart';
-import 'doctor_details_screen.dart';
+import '../Widgets/list_doctor1.dart';
 
-class doctor_search extends StatelessWidget {
-  doctor_search({super.key});
+class DoctorSearchController extends GetxController {
+  var searchQuery = ''.obs;
+}
+
+class DoctorSearch extends StatelessWidget {
+  DoctorSearch({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final DoctorSearchController controller = Get.put(DoctorSearchController());
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -54,7 +61,7 @@ class doctor_search extends StatelessWidget {
                   ),
                 );
               },
-              child: list_doctor1(modelsDoctor: dummyDoctorList[index]),
+              child: ListDoctor1(modelsDoctor: dummyDoctorList[index]),
             );
           },
         ),

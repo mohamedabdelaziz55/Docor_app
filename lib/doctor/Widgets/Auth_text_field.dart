@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class Auth_text_field extends StatelessWidget {
   final String text;
@@ -6,7 +7,12 @@ class Auth_text_field extends StatelessWidget {
   final TextEditingController? controller;
   final String? Function(String?)? validator;
 
-  Auth_text_field({required this.text, required this.icon, this.controller, this.validator});
+  Auth_text_field({
+    required this.text,
+    required this.icon,
+    this.controller,
+    this.validator,
+  });
 
   @override
   Widget build(BuildContext context) {

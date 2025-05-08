@@ -1,8 +1,9 @@
 import 'package:doctor_app/Screens/Views/questions_screen.dart';
 import 'package:doctor_app/date/dummy_doctor.dart';
+import 'package:doctor_app/doctor/ViewsDoc/puzzle_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import '../Widgets/banner.dart';
 import '../Widgets/listIcons.dart';
@@ -61,59 +62,41 @@ class Dashboard extends StatelessWidget {
               child: Container(
                 height: MediaQuery.of(context).size.height * 0.06,
                 width: MediaQuery.of(context).size.width * 0.9,
-                decoration: BoxDecoration(),
                 child: SearchTextField(
                   ontap: () {
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                        type: PageTransitionType.rightToLeft,
-                        child: FindDoctor(),
-                      ),
-                    );
+                    Get.to(() => FindDoctor());
                   },
                   text: "Search doctor, drugs, articles...",
                 ),
               ),
             ),
             SizedBox(height: 20),
-            // Body Start from here
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                listIcons(Icon: "assets/icons/Doctor.png", text: "Doctor"),
-                listIcons(
-                  Icon: "assets/icons/appoint.png",
+                ListIcons(icon: "assets/icons/Doctor.png", text: "Doctor"),
+                ListIcons(
+                  icon: "assets/icons/appoint.png",
                   text: "Articles",
-                  ontap: () {
-                    Navigator.pushReplacement(
-                      context,
-                      PageTransition(
-                        type: PageTransitionType.rightToLeft,
-                        child: ArticlesScreen(),
-                      ),
-                    );
+                  onTap: () {
+                    Get.off(() => ArticlesScreen());
                   },
                 ),
-                listIcons(
-                  Icon: "assets/icons/communication.png",
+                ListIcons(
+
+                  icon: "assets/icons/communication.png",
                   text: "Questions",
-                  ontap: () {
-                    Navigator.pushReplacement(
-                      context,
-                      PageTransition(
-                        type: PageTransitionType.rightToLeft,
-                        child: QuestionsScreen(),
-                      ),
-                    );
+                  onTap: () {
+                    Get.off(() => QuestionsScreen());
                   },
                 ),
-                listIcons(Icon: "assets/icons/puzzle.png", text: "Puzzle"),
+                ListIcons(icon: "assets/icons/puzzle.png", text: "Puzzle",onTap: () {
+                  Get.off(() => PuzzleScreen());
+                },),
               ],
             ),
             SizedBox(height: 10),
-            const banner(),
-            // Banner Design
+            const BannerView(),
             const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -130,13 +113,7 @@ class Dashboard extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacement(
-                        context,
-                        PageTransition(
-                          type: PageTransitionType.rightToLeft,
-                          child: doctor_search(),
-                        ),
-                      );
+                      Get.off(() => doctor_search());
                     },
                     child: Text(
                       "See all",
@@ -162,23 +139,14 @@ class Dashboard extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                            type: PageTransitionType.rightToLeft,
-                            child: DoctorDetails(
-                              doctor: dummyDoctorList[index],
-                            ),
-                          ),
-                        );
+                        Get.to(() => DoctorDetails(doctor: dummyDoctorList[index]));
                       },
-                      child: list_doctor2(modelsDoctor: dummyDoctorList[index]),
+                      child: DoctorList2(modelsDoctor: dummyDoctorList[index]),
                     );
                   },
                 ),
               ),
             ),
-
           ],
         ),
       ),

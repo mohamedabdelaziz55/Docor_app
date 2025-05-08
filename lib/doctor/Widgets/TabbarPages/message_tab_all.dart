@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'package:page_transition/page_transition.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
-import '../../Views/chat_screen.dart';
+import '../../../Screens/Views/chat_screen.dart';
 import '../message_all_widget.dart';
 
-class message_tab_all extends StatefulWidget {
-  const message_tab_all({Key? key}) : super(key: key);
+class message_taball extends StatefulWidget {
+  const message_taball({Key? key}) : super(key: key);
 
   @override
   _TabBarExampleState createState() => _TabBarExampleState();
 }
 
-class _TabBarExampleState extends State<message_tab_all>
+class _TabBarExampleState extends State<message_taball>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
 
@@ -49,9 +47,10 @@ class _TabBarExampleState extends State<message_tab_all>
               height: 20,
               width: 20,
               decoration: const BoxDecoration(
-                  image: DecorationImage(
-                image: AssetImage("assets/icons/bell.png"),
-              )),
+                image: DecorationImage(
+                  image: AssetImage("assets/icons/bell.png"),
+                ),
+              ),
             ),
           ),
         ],
@@ -59,42 +58,40 @@ class _TabBarExampleState extends State<message_tab_all>
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  PageTransition(
-                      type: PageTransitionType.bottomToTop,
-                    child: ChatScreen(
-                      currentUserId: 1, // ID المستخدم الحالي (ممكن تجيبه من SharedPreferences)
-                      receiverId: 2,    // ID الدكتور اللي هتكلمه
-                      receiverName: "Dr. Marcus Horizon",
-                    ),));
-            },
-            child: message_all_widget(
-              image: "assets/icons/male-doctor.png",
-              mainText: "Dr. Marcus Horizon",
-              subText: "I don,t have any fever, but headchace...",
-              time: "10.24",
-              messageCount: "2",
+        child: Column(
+          children: [
+            GestureDetector(
+              onTap: () {
+                Get.to(
+                      () => ChatScreen(
+                    currentUserId: 1,
+                    receiverId: 2,
+                    receiverName: "Mohamed Elsafty",
+                  ),
+                  transition: Transition.downToUp,
+                  duration: const Duration(milliseconds: 300),
+                );
+              },
+              child: MessageAllWidget(
+                image: "assets/images/persona.jpg",
+                mainText: "Mohamed Elsafty",
+                subText: "I don't have any fever, but headache...",
+                time: "10.24",
+                messageCount: "2",
+              ),
             ),
-          ),
-          message_all_widget(
-            image: "assets/icons/docto3.png",
-            mainText: "Dr. Alysa Hana",
-            subText: "Hello, How can i help you?",
-            time: "10.24",
-            messageCount: "1",
-          ),
-          message_all_widget(
-            image: "assets/icons/doctor2.png",
-            mainText: "Dr. Maria Elena",
-            subText: "Do you have fever?",
-            time: "10.24",
-            messageCount: "3",
-          ),
-        ]),
+            MessageAllWidget(
+              image: "assets/images/personp.jpg",
+
+
+              mainText: "Ahmed Mohamed",
+              subText: "Hello, How can I help you?",
+              time: "10.24",
+              messageCount: "1",
+            ),
+
+          ],
+        ),
       ),
     );
   }

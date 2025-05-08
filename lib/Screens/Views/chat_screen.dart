@@ -1,7 +1,42 @@
 import 'package:flutter/material.dart';
-import '../../models/models_patient/ChatService.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
-class ChatScreen extends StatefulWidget {
+
+class ChatController extends GetxController {
+  final ChatService _chatService = ChatService();
+  final TextEditingController controller = TextEditingController();
+  final RxList<Message> messages = <Message>[].obs;
+
+  int currentUserId = 0;
+  int receiverId = 0;
+
+  void initChat(int currentId, int receiver) {
+    currentUserId = currentId;
+    receiverId = receiver;
+    loadMessages();
+  }
+
+  Future<void> loadMessages() async {
+    final data = await _chatService.getMessages(currentUserId, receiverId);
+    messages.assignAll(data);
+  }
+
+  Future<void> sendMessage() async {
+    final text = controller.text.trim();
+    if (text.isNotEmpty) {
+      final success = await _chatService.sendMessage(currentUserId, receiverId, text);
+      if (success) {
+        controller.clear();
+        await loadMessages();
+      }
+    }
+  }
+}
+class ChatScreen extends StatelessWidget {
   final int currentUserId;
   final int receiverId;
   final String receiverName;
@@ -14,43 +49,13 @@ class ChatScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ChatScreenState createState() => _ChatScreenState();
-}
-
-class _ChatScreenState extends State<ChatScreen> {
-  final ChatService _chatService = ChatService();
-  final TextEditingController _controller = TextEditingController();
-  List<Message> _messages = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _loadMessages();
-  }
-
-  Future<void> _loadMessages() async {
-    final messages = await _chatService.getMessages(widget.currentUserId, widget.receiverId);
-    setState(() {
-      _messages = messages;
-    });
-  }
-
-  Future<void> _sendMessage() async {
-    final text = _controller.text.trim();
-    if (text.isNotEmpty) {
-      final success = await _chatService.sendMessage(widget.currentUserId, widget.receiverId, text);
-      if (success) {
-        _controller.clear();
-        _loadMessages(); // Reload after send
-      }
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final ChatController controller = Get.put(ChatController());
+    controller.initChat(currentUserId, receiverId);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.receiverName),
+        title: Text(receiverName),
         actions: [
           IconButton(icon: Icon(Icons.call), onPressed: () {}),
           IconButton(icon: Icon(Icons.videocam), onPressed: () {}),
@@ -59,12 +64,12 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
+            child: Obx(() => ListView.builder(
               reverse: true,
-              itemCount: _messages.length,
+              itemCount: controller.messages.length,
               itemBuilder: (context, index) {
-                final message = _messages[_messages.length - index - 1];
-                final isMe = message.senderId == widget.currentUserId;
+                final message = controller.messages[controller.messages.length - index - 1];
+                final isMe = message.senderId == currentUserId;
 
                 return Align(
                   alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
@@ -82,7 +87,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 );
               },
-            ),
+            )),
           ),
           Divider(height: 1),
           Container(
@@ -92,14 +97,14 @@ class _ChatScreenState extends State<ChatScreen> {
               children: [
                 Expanded(
                   child: TextField(
-                    controller: _controller,
+                    controller: controller.controller,
                     decoration: InputDecoration.collapsed(hintText: "Type message ..."),
                   ),
                 ),
                 IconButton(
                   icon: Icon(Icons.send, color: Colors.green),
-                  onPressed: _sendMessage,
-                )
+                  onPressed: controller.sendMessage,
+                ),
               ],
             ),
           ),
@@ -107,4 +112,35 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
+}
+class ChatService {
+  // بيانات تجريبية للرسائل
+  Future<List<Message>> getMessages(int currentUserId, int receiverId) async {
+    // البيانات التجريبية للرسائل بين المستخدمين
+    return [
+      Message(senderId: 1, receiverId: 2, message: "السلام عليكم"),
+      Message(senderId: 2, receiverId: 1, message: "وعليكم السلام، إزيك؟"),
+      Message(senderId: 1, receiverId: 2, message: "الحمد لله، كنت عايز استفسر عن نتيجة التحاليل."),
+      Message(senderId: 2, receiverId: 1, message: "أكيد، ابعتهالي وشوفلك الرد."),
+      Message(senderId: 1, receiverId: 2, message: "تمام، شكراً ليك يا دكتور."),
+      Message(senderId: 2, receiverId: 1, message: "العفو، في خدمتك دايمًا."),
+    ];
+  }
+
+  Future<bool> sendMessage(int currentUserId, int receiverId, String text) async {
+    // هنا ممكن تضيف منطق إرسال الرسالة (مثل إرسالها لـ API)
+    // حاليًا نعتبر الرسالة تم إرسالها بنجاح
+    return true;
+  }
+}
+class Message {
+  final int senderId;
+  final int receiverId;
+  final String message;
+
+  Message({
+    required this.senderId,
+    required this.receiverId,
+    required this.message,
+  });
 }

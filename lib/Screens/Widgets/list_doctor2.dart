@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:get/get.dart';
+
 import '../../models/models_patient/model_doctors.dart';
 
-class list_doctor2 extends StatelessWidget {
-  const list_doctor2({required this.modelsDoctor, this.onPressed});
+class DoctorListController extends GetxController {
+  // Controller logic (if needed in the future) can be added here
+}
+
+class DoctorList2 extends StatelessWidget {
+  const DoctorList2({required this.modelsDoctor, this.onPressed});
 
   final ModelsDoctors modelsDoctor;
   final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
+    final DoctorListController controller = Get.put(DoctorListController());
+
     return GestureDetector(
       onTap: onPressed,
       child: Padding(
@@ -41,7 +49,7 @@ class list_doctor2 extends StatelessWidget {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: SingleChildScrollView( // أضف SingleChildScrollView هنا
+                  child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -70,8 +78,7 @@ class list_doctor2 extends StatelessWidget {
                               decoration: const BoxDecoration(
                                 image: DecorationImage(
                                   image: AssetImage("assets/icons/Star.png"),
-                                  // filterQuality: FilterQuality.,
-fit: BoxFit.fill,
+                                  fit: BoxFit.fill,
                                 ),
                               ),
                             ),

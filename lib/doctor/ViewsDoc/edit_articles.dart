@@ -3,113 +3,100 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:doctor_app/doctor/ViewsDoc/HomepageDoc.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:get/get.dart';
 import '../../constet.dart';
 import '../../crud.dart';
 import '../../main.dart';
-import '../../models/models_patient/model_doctors.dart'; // لنقل بيانات المقالة
+import '../../models/models_patient/model_doctors.dart'; // Data for the article
 
-class EditArticles extends StatefulWidget {
+class EditArticlesController extends GetxController {
+  var isLoading = false.obs;
+  var myFile = Rxn<File>();
+  var titleController = TextEditingController();
+  var subtitleController = TextEditingController();
+
+  final Crud _crud = Crud();
+
+  void init(String title, String subtitle) {
+    titleController.text = title;
+    subtitleController.text = subtitle;
+  }
+
+  Future<void> editArticle(DataArtices article) async {
+    if (myFile.value == null && article.imageArticles == null) {
+      AwesomeDialog(
+        context: Get.context!,
+        title: 'Important',
+        body: Text("Please add an image for the article."),
+      )..show();
+      return;
+    }
+
+    isLoading.value = true;
+
+    var docId = sp.getString("id");
+    if (docId == null) {
+      isLoading.value = false;
+      AwesomeDialog(
+        context: Get.context!,
+        title: 'Error',
+        body: Text("Doctor ID not found."),
+      )..show();
+      return;
+    }
+
+    var imageFile = myFile.value ?? File(article.imageArticles ?? '');
+
+    if (myFile.value != null && !await imageFile.exists()) {
+      isLoading.value = false;
+      AwesomeDialog(
+        context: Get.context!,
+        title: 'Error',
+        body: Text("The selected image does not exist."),
+      )..show();
+      return;
+    }
+
+    var response = await _crud.postRequestWithFile(linkUpdateArtices, {
+      "title_articles": titleController.text,
+      "article_text": subtitleController.text,
+      "writer_name": sp.getString("username") ?? "Unknown",
+      "doc_id": docId,
+      "id": article.id.toString(),
+    }, imageFile);
+
+    if (response == null) {
+      isLoading.value = false;
+      AwesomeDialog(
+        context: Get.context!,
+        title: 'Error',
+        body: Text("Error connecting to the server."),
+      )..show();
+      return;
+    }
+
+    if (response["status"] == "success") {
+      Get.to(() => HomepageDoc());
+    } else {
+      ScaffoldMessenger.of(Get.context!).showSnackBar(
+        SnackBar(content: Text('Error occurred while updating the article')),
+      );
+    }
+
+    isLoading.value = false;
+  }
+}
+
+class EditArticles extends StatelessWidget {
   final DataArtices article;
 
   const EditArticles({super.key, required this.article});
 
   @override
-  State<EditArticles> createState() => _EditArticlesState();
-}
-
-class _EditArticlesState extends State<EditArticles> {
-  File? myfile;
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  TextEditingController title = TextEditingController();
-  TextEditingController subtitle = TextEditingController();
-  final Crud _crud = Crud();
-  bool isloading = false;
-
-  @override
-  void initState() {
-    super.initState();
-    title.text = widget.article.titleArticles ?? ''; // تحميل عنوان المقالة
-    subtitle.text = widget.article.articleText ?? ''; // تحميل محتوى المقالة
-  }
-  editArticles() async {
-    // إذا لم يتم اختيار صورة جديدة وكان المقال لا يحتوي على صورة قديمة
-    if (myfile == null && widget.article.imageArticles == null) {
-      return AwesomeDialog(
-        context: context,
-        title: 'هام',
-        body: Text("الرجاء إضافة الصورة الخاصة بالمقال."),
-      )..show();
-    }
-
-    setState(() {
-      isloading = true;
-    });
-
-    if (formKey.currentState!.validate()) {
-      var docId = sp.getString("id");
-      if (docId == null) {
-        setState(() {
-          isloading = false;
-        });
-        return AwesomeDialog(
-          context: context,
-          title: 'خطأ',
-          body: Text("لم يتم العثور على معرف الطبيب."),
-        )..show();
-      }
-
-      var imageFile = myfile ?? File(widget.article.imageArticles ?? ''); // استخدام الصورة القديمة إذا لم تكن صورة جديدة
-
-      // التحقق من وجود الصورة (إذا كانت صورة جديدة)
-      if (myfile != null && !await imageFile.exists()) {
-        setState(() {
-          isloading = false;
-        });
-        return AwesomeDialog(
-          context: context,
-          title: 'خطأ',
-          body: Text("الصورة المحددة غير موجودة."),
-        )..show();
-      }
-
-      var response = await _crud.postRequestWithFile(linkUpdateArtices, {
-        "title_articles": title.text,
-        "article_text": subtitle.text,
-        "writer_name": sp.getString("username") ?? "غير معروف",
-        "doc_id": docId,
-        "id": widget.article.id.toString(),
-      }, imageFile);
-
-      if (response == null) {
-        setState(() {
-          isloading = false;
-        });
-        return AwesomeDialog(
-          context: context,
-          title: 'خطأ',
-          body: Text("حدث خطأ في الاتصال بالخادم."),
-        )..show();
-      }
-
-      if (response["status"] == "success") {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomepageDoc()),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('حدث خطأ أثناء تعديل المقال')),
-        );
-      }
-    }
-
-    setState(() {
-      isloading = false;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final EditArticlesController controller = Get.put(EditArticlesController());
+    controller.init(article.titleArticles ?? '', article.articleText ?? '');
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -120,7 +107,6 @@ class _EditArticlesState extends State<EditArticles> {
       body: Container(
         padding: EdgeInsets.all(10),
         child: Form(
-          key: formKey,
           child: ListView(
             children: [
               GestureDetector(
@@ -140,9 +126,7 @@ class _EditArticlesState extends State<EditArticles> {
                                 source: ImageSource.gallery,
                               );
                               if (xfile != null) {
-                                setState(() {
-                                  myfile = File(xfile.path);
-                                });
+                                controller.myFile.value = File(xfile.path);
                               }
                               Navigator.pop(context);
                             },
@@ -155,9 +139,7 @@ class _EditArticlesState extends State<EditArticles> {
                                 source: ImageSource.camera,
                               );
                               if (xfile != null) {
-                                setState(() {
-                                  myfile = File(xfile.path);
-                                });
+                                controller.myFile.value = File(xfile.path);
                               }
                               Navigator.pop(context);
                             },
@@ -174,62 +156,64 @@ class _EditArticlesState extends State<EditArticles> {
                     border: Border.all(color: Colors.grey),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: myfile == null
-                      ? (widget.article.imageArticles == null
-                      ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.add_a_photo,
-                          size: 40,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          "Upload Image",
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  )
-                      : ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      "$imageRoot/${widget.article.imageArticles}",
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: double.infinity,
-                    ),
-                  ))
-                      : ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.file(
-                      myfile!,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: double.infinity,
-                    ),
-                  ),
+                  child: Obx(() {
+                    return controller.myFile.value == null
+                        ? (article.imageArticles == null
+                        ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.add_a_photo,
+                            size: 40,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "Upload Image",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    )
+                        : ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        "$imageRoot/${article.imageArticles}",
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                      ),
+                    ))
+                        : ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.file(
+                        controller.myFile.value!,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                      ),
+                    );
+                  }),
                 ),
               ),
               SizedBox(height: 15),
               buildCustomTextFormField(
-                controller: title,
+                controller: controller.titleController,
                 labelText: "Title",
-                validationMessage: 'يرجى إدخال عنوان.',
+                validationMessage: 'Please enter a title.',
               ),
               SizedBox(height: 20),
               buildCustomTextFormField(
-                controller: subtitle,
+                controller: controller.subtitleController,
                 labelText: "Content",
-                validationMessage: 'يرجى إدخال محتوى.',
+                validationMessage: 'Please enter content.',
               ),
               Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: MaterialButton(
                   onPressed: () async {
-                    await editArticles();
+                    await controller.editArticle(article);
                   },
                   color: Color.fromARGB(255, 3, 190, 150),
                   textColor: Colors.white,
@@ -238,19 +222,22 @@ class _EditArticlesState extends State<EditArticles> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   minWidth: double.infinity,
-                  child: isloading
-                      ? SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 2,
-                    ),
-                  )
-                      : Text(
-                    "Save Changes",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
+                  child: Obx(() {
+                    return controller.isLoading.value
+                        ? SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                        : Text(
+                      "Save Changes",
+                      style: TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
+                    );
+                  }),
                 ),
               ),
             ],

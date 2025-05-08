@@ -1,19 +1,21 @@
-import 'package:doctor_app/Screens/Views/shedule_tab2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
+import '../../Screens/Views/shedule_tab1.dart';
+import '../../Screens/Views/shedule_tab2.dart';
 import '../../Screens/Widgets/TabbarPages/message_tab_all.dart';
 
-class message_screen extends StatefulWidget {
-  const message_screen({Key? key}) : super(key: key);
+class MessageScreen extends StatefulWidget {
+  const MessageScreen({Key? key}) : super(key: key);
 
   @override
-  _TabBarExampleState createState() => _TabBarExampleState();
+  _MessageScreenState createState() => _MessageScreenState();
 }
 
-class _TabBarExampleState extends State<message_screen>
-    with SingleTickerProviderStateMixin {
+class _MessageScreenState extends State<MessageScreen> with SingleTickerProviderStateMixin {
+  RxInt selectedIndex = 0.obs;
   late TabController tabController;
 
   @override
@@ -47,9 +49,10 @@ class _TabBarExampleState extends State<message_screen>
               height: 20,
               width: 20,
               decoration: const BoxDecoration(
-                  image: DecorationImage(
-                image: AssetImage("assets/icons/bell.png"),
-              )),
+                image: DecorationImage(
+                  image: AssetImage("assets/icons/bell.png"),
+                ),
+              ),
             ),
           ),
         ],
@@ -68,7 +71,6 @@ class _TabBarExampleState extends State<message_screen>
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Container(
-                        // height: 50,
                         width: MediaQuery.of(context).size.height,
                         decoration: BoxDecoration(
                           border: Border.all(
@@ -86,9 +88,9 @@ class _TabBarExampleState extends State<message_screen>
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 indicatorColor:
-                                    const Color.fromARGB(255, 241, 241, 241),
+                                const Color.fromARGB(255, 241, 241, 241),
                                 unselectedLabelColor:
-                                    const Color.fromARGB(255, 32, 32, 32),
+                                const Color.fromARGB(255, 32, 32, 32),
                                 labelColor: Color.fromARGB(255, 255, 255, 255),
                                 controller: tabController,
                                 tabs: const [
@@ -108,11 +110,11 @@ class _TabBarExampleState extends State<message_screen>
                         ),
                       ),
                     ),
-                    TabBarView(controller: tabController, children: const [
-                      message_tab_all(),
-                      shedule_tab2(),
-                      shedule_tab2(),
-                    ])
+                    Obx(() => TabBarView(controller: tabController, children: const [
+                      MessageTabAll(),
+                      SchedulgeTabDoc1(),
+                      ScheduleTab2(),
+                    ]))
                   ],
                 ),
               ),

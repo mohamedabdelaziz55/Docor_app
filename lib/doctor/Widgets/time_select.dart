@@ -1,32 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class time_select extends StatefulWidget {
+class TimeSelect extends StatefulWidget {
   final String mainText;
 
-  time_select({required this.mainText});
+  TimeSelect({required this.mainText});
 
   @override
-  _time_selectState createState() => _time_selectState();
+  _TimeSelectState createState() => _TimeSelectState();
 }
 
-class _time_selectState extends State<time_select> {
-  bool isSelected = false;
+class _TimeSelectState extends State<TimeSelect> {
+  RxBool isSelected = false.obs;
 
   void toggleSelection() {
-    setState(() {
-      isSelected = !isSelected;
-    });
+    isSelected.value = !isSelected.value;
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: toggleSelection,
-      child: Container(
+      child: Obx(() => Container(
         height: MediaQuery.of(context).size.height * 0.05,
         width: MediaQuery.of(context).size.width * 0.2700,
         decoration: BoxDecoration(
-          color: isSelected
+          color: isSelected.value
               ? const Color.fromARGB(255, 2, 179, 149)
               : Colors.white,
           borderRadius: BorderRadius.circular(20),
@@ -38,14 +37,15 @@ class _time_selectState extends State<time_select> {
             Text(
               widget.mainText,
               style: TextStyle(
-                  color: isSelected
-                      ? Colors.white
-                      : Color.fromARGB(255, 85, 85, 85),
-                  fontWeight: FontWeight.w500),
+                color: isSelected.value
+                    ? Colors.white
+                    : const Color.fromARGB(255, 85, 85, 85),
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ],
         ),
-      ),
+      )),
     );
   }
 }

@@ -1,44 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:page_transition/page_transition.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:get/get.dart';
+
 import '../../Screens/Widgets/chat_doctor.dart';
 import '../../Screens/Widgets/chat_info.dart';
 import 'HomepageDoc.dart';
 
-class chat_screen extends StatelessWidget {
-  const chat_screen({super.key});
+class ChatScreen extends StatelessWidget {
+  const ChatScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        // Leading icon for navigation
         leading: GestureDetector(
           onTap: () {
-            Navigator.push(
-                context,
-                PageTransition(
-                    type: PageTransitionType.fade, child: HomepageDoc()));
+            Get.to(() => HomepageDoc(), transition: Transition.fade);
           },
           child: Container(
             height: 10,
             width: 10,
             decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/icons/back1.png"),
-                )),
+              image: DecorationImage(
+                image: AssetImage("assets/icons/back1.png"),
+              ),
+            ),
           ),
         ),
-        // Title of the chat screen
         title: Text(
           "Dr. Marcus Horizon",
           style: GoogleFonts.poppins(
-              color: Colors.black,
-              fontWeight: FontWeight.w500,
-              fontSize: 17.sp),
+            color: Colors.black,
+            fontWeight: FontWeight.w500,
+            fontSize: 17.sp,
+          ),
         ),
         centerTitle: false,
         elevation: 0,
@@ -48,38 +46,34 @@ class chat_screen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
-                // Video call icon
                 Container(
                   height: 18,
                   width: 18,
                   decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("assets/icons/video_call.png"),
-                      )),
+                    image: DecorationImage(
+                      image: AssetImage("assets/icons/video_call.png"),
+                    ),
+                  ),
                 ),
-                const SizedBox(
-                  width: 15,
-                ),
-                // Call icon
+                const SizedBox(width: 15),
                 Container(
                   height: 18,
                   width: 18,
                   decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("assets/icons/call.png"),
-                      )),
+                    image: DecorationImage(
+                      image: AssetImage("assets/icons/call.png"),
+                    ),
+                  ),
                 ),
-                const SizedBox(
-                  width: 15,
-                ),
-                // More options icon
+                const SizedBox(width: 15),
                 Container(
                   height: 18,
                   width: 18,
                   decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("assets/icons/more.png"),
-                      )),
+                    image: DecorationImage(
+                      image: AssetImage("assets/icons/more.png"),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -95,16 +89,10 @@ class chat_screen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const chat_info(),
-                const SizedBox(
-                  height: 30,
-                ),
-                // Widget to display doctor's information
-                const chat_doctor(),
-                const SizedBox(
-                  height: 15,
-                ),
-                // Container for user's introductory message
+                const ChatInfo(),
+                const SizedBox(height: 30),
+                const ChatDoctor(),
+                const SizedBox(height: 15),
                 Container(
                   height: MediaQuery.of(context).size.height * 0.03,
                   width: MediaQuery.of(context).size.width * 0.4500,
@@ -117,18 +105,16 @@ class chat_screen extends StatelessWidget {
                     ),
                   ),
                   child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Hello. how can i help you?",
-                          style: TextStyle(fontSize: 15.sp),
-                        )
-                      ]),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Hello. How can I help you?",
+                        style: TextStyle(fontSize: 15.sp),
+                      ),
+                    ],
+                  ),
                 ),
-                const SizedBox(
-                  height: 15,
-                ),
-                // Container for user's message
+                const SizedBox(height: 15),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -145,41 +131,39 @@ class chat_screen extends StatelessWidget {
                         ),
                       ),
                       child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                // User's message content
-                                child: Text(
-                                  "I have suffering from headache and cold for 3 days, I took 2 tablets of dolo,\nbut still pain",
-                                  style: TextStyle(
-                                      fontSize: 14.sp, color: Colors.white),
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                "I have been suffering from headache and cold for 3 days, I took 2 tablets of dolo,\nbut still in pain",
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
-                            Container(
-                              height: MediaQuery.of(context).size.height * 0.02,
-                              width: MediaQuery.of(context).size.width * 0.05,
-                              decoration: const BoxDecoration(
-                                  image: DecorationImage(
-                                      image: AssetImage("assets/icons/ticks.png"),
-                                      filterQuality: FilterQuality.high)),
-                            )
-                          ]),
+                          ),
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.02,
+                            width: MediaQuery.of(context).size.width * 0.05,
+                            decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage("assets/icons/ticks.png"),
+                                filterQuality: FilterQuality.high,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 30,
-                ),
-                // Widget to display doctor's information
-                const chat_doctor(),
-                const SizedBox(
-                  height: 15,
-                ),
-                // Container for user's introductory message
+                const SizedBox(height: 30),
+                const ChatDoctor(),
+                const SizedBox(height: 15),
                 Container(
                   height: MediaQuery.of(context).size.height * 0.03,
                   width: MediaQuery.of(context).size.width * 0.4500,
@@ -192,18 +176,16 @@ class chat_screen extends StatelessWidget {
                     ),
                   ),
                   child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Hello. how can i help you?",
-                          style: TextStyle(fontSize: 14.sp),
-                        )
-                      ]),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Hello. How can I help you?",
+                        style: TextStyle(fontSize: 14.sp),
+                      ),
+                    ],
+                  ),
                 ),
-                const SizedBox(
-                  height: 15,
-                ),
-                // Container for user's message
+                const SizedBox(height: 15),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -220,29 +202,33 @@ class chat_screen extends StatelessWidget {
                         ),
                       ),
                       child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                // User's message content
-                                child: Text(
-                                  "I have suffering from headache and cold for 3 days, I took 2 tablets of dolo,\nbut still pain",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 13.sp),
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                "I have been suffering from headache and cold for 3 days, I took 2 tablets of dolo,\nbut still in pain",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13.sp,
                                 ),
                               ),
                             ),
-                            Container(
-                              height: MediaQuery.of(context).size.height * 0.02,
-                              width: MediaQuery.of(context).size.width * 0.05,
-                              decoration: const BoxDecoration(
-                                  image: DecorationImage(
-                                      image: AssetImage("assets/icons/ticks.png"),
-                                      filterQuality: FilterQuality.high)),
-                            )
-                          ]),
+                          ),
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.02,
+                            width: MediaQuery.of(context).size.width * 0.05,
+                            decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage("assets/icons/ticks.png"),
+                                filterQuality: FilterQuality.high,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -251,47 +237,52 @@ class chat_screen extends StatelessWidget {
           ),
           Container(
             height: MediaQuery.of(context).size.height * 0.1,
-            child: Row(children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Center(
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.1,
-                    width: MediaQuery.of(context).size.width * 0.82,
-                    child: TextField(
-                      textAlign: TextAlign.start,
-                      textInputAction: TextInputAction.none,
-                      obscureText: false,
-                      keyboardType: TextInputType.emailAddress,
-                      textAlignVertical: TextAlignVertical.center,
-                      decoration: InputDecoration(
-                        focusColor: Colors.black26,
-                        fillColor: Color.fromARGB(255, 247, 247, 247),
-                        filled: true,
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Center(
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.1,
+                      width: MediaQuery.of(context).size.width * 0.82,
+                      child: TextField(
+                        textAlign: TextAlign.start,
+                        textInputAction: TextInputAction.none,
+                        obscureText: false,
+                        keyboardType: TextInputType.emailAddress,
+                        textAlignVertical: TextAlignVertical.center,
+                        decoration: InputDecoration(
+                          focusColor: Colors.black26,
+                          fillColor: Color.fromARGB(255, 247, 247, 247),
+                          filled: true,
+                          prefixIcon: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Container(
+                              height: 10,
+                              width: 10,
+                              child: Image.asset("assets/icons/pin.png"),
+                            ),
                           ),
-                          child: Container(
-                            height: 10,
-                            width: 10,
-                            child: Image.asset("assets/icons/pin.png"),
+                          prefixIconColor: const Color.fromARGB(
+                            255,
+                            3,
+                            190,
+                            150,
                           ),
-                        ),
-                        prefixIconColor: const Color.fromARGB(255, 3, 190, 150),
-                        label: Text("Type message ..."),
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                          borderRadius: BorderRadius.circular(30),
+                          label: Text("Type message ..."),
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ]),
-          )
+              ],
+            ),
+          ),
         ],
       ),
     );

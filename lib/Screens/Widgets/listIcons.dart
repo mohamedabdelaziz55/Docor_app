@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:get/get.dart';
 
-class listIcons extends StatelessWidget {
-  final String Icon;
+class ListIconsController extends GetxController {
+  // Controller logic (if needed in the future) can be added here
+}
+
+class ListIcons extends StatelessWidget {
+  final String icon;
   final String text;
-final void Function()? ontap;
-  listIcons({required this.Icon, required this.text, this.ontap});
+  final void Function()? onTap;
+
+  ListIcons({required this.icon, required this.text, this.onTap});
 
   @override
   Widget build(BuildContext context) {
+    final ListIconsController controller = Get.put(ListIconsController());
+
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Row(
@@ -18,22 +26,24 @@ final void Function()? ontap;
           Column(
             children: [
               GestureDetector(
-                onTap:ontap,
+                onTap: onTap,
                 child: Container(
                   height: MediaQuery.of(context).size.height * 0.07,
                   width: MediaQuery.of(context).size.width * 0.15,
                   decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: const [
-                        BoxShadow(
-                            blurRadius: 10,
-                            spreadRadius: 1,
-                            color: Color.fromARGB(135, 238, 236, 236))
-                      ],
-                      image: DecorationImage(
-                        image: AssetImage(Icon),
-                      )),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: const [
+                      BoxShadow(
+                        blurRadius: 10,
+                        spreadRadius: 1,
+                        color: Color.fromARGB(135, 238, 236, 236),
+                      ),
+                    ],
+                    image: DecorationImage(
+                      image: AssetImage(icon),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(
@@ -42,7 +52,7 @@ final void Function()? ontap;
               Text(
                 text,
                 style: GoogleFonts.inter(fontSize: 15.sp, color: Colors.grey),
-              )
+              ),
             ],
           ),
         ],

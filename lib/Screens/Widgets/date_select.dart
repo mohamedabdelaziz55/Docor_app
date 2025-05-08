@@ -1,37 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:get/get.dart';
 
-class date_Select extends StatefulWidget {
-  final String maintext;
-  final String date;
-
-  date_Select({required this.date, required this.maintext});
-
-  @override
-  _date_SelectState createState() => _date_SelectState();
-}
-
-class _date_SelectState extends State<date_Select> {
-  bool isSelected = false;
+class DateSelectController extends GetxController {
+  var isSelected = false.obs;
 
   void toggleSelection() {
-    setState(() {
-      isSelected = !isSelected;
-    });
+    isSelected.value = !isSelected.value;
   }
+}
+
+class DateSelect extends StatelessWidget {
+  final String mainText;
+  final String date;
+
+  DateSelect({required this.date, required this.mainText});
 
   @override
   Widget build(BuildContext context) {
+    final DateSelectController controller = Get.put(DateSelectController());
+
     return GestureDetector(
-      onTap: toggleSelection,
+      onTap: controller.toggleSelection,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
           height: MediaQuery.of(context).size.height * 0.02,
           width: MediaQuery.of(context).size.width * 0.15,
           decoration: BoxDecoration(
-            color: isSelected
+            color: controller.isSelected.value
                 ? const Color.fromARGB(255, 2, 179, 149)
                 : Colors.white,
             borderRadius: BorderRadius.circular(18),
@@ -43,17 +41,17 @@ class _date_SelectState extends State<date_Select> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  widget.maintext,
+                  mainText,
                   style: GoogleFonts.poppins(
                     fontSize: 15.sp,
-                    color: isSelected ? Colors.white : Colors.black54,
+                    color: controller.isSelected.value ? Colors.white : Colors.black54,
                   ),
                 ),
                 Text(
-                  widget.date,
+                  date,
                   style: GoogleFonts.inter(
                     fontSize: 18.sp,
-                    color: isSelected
+                    color: controller.isSelected.value
                         ? Colors.white
                         : const Color.fromARGB(255, 27, 27, 27),
                     fontWeight: FontWeight.w500,

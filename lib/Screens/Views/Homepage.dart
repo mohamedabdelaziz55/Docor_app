@@ -1,20 +1,45 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import '../Login-Signup/Profile_screen.dart';
 import '../Login-Signup/shedule_screen.dart';
 import '../Widgets/TabbarPages/message_tab_all.dart';
 import 'Dashboard_screen.dart';
 
-
-class Homepage extends StatefulWidget {
-  static String id="Homepage";
+class Homepage extends StatelessWidget {
+  static String id = "/Homepage";
 
   @override
-  State<Homepage> createState() => _HomepageState();
+  Widget build(BuildContext context) {
+    return GetBuilder<_HomepageController>(
+      init: _HomepageController(),
+      builder: (controller) {
+        return Scaffold(
+          backgroundColor: Colors.white,
+          body: controller.pages[controller.page],
+          bottomNavigationBar: AnimatedBottomNavigationBar(
+            icons: controller.icons,
+            iconSize: 20,
+            activeIndex: controller.page,
+            height: 80,
+            splashSpeedInMilliseconds: 300,
+            gapLocation: GapLocation.none,
+            activeColor: const Color.fromARGB(255, 0, 190, 165),
+            inactiveColor: const Color.fromARGB(255, 223, 219, 219),
+            onTap: (int tappedIndex) {
+              controller.changePage(tappedIndex);
+            },
+          ),
+        );
+      },
+    );
+  }
 }
 
-class _HomepageState extends State<Homepage> {
+class _HomepageController extends GetxController {
+  int page = 0;
+
   List<IconData> icons = [
     FontAwesomeIcons.house,
     FontAwesomeIcons.envelope,
@@ -22,35 +47,15 @@ class _HomepageState extends State<Homepage> {
     FontAwesomeIcons.user,
   ];
 
-  int page = 0;
-
   List<Widget> pages = [
-    Dashboard(), // You can replace this with your actual pages
-    message_tab_all(),
-    shedule_screen(),
-    Profile_screen()
+    Dashboard(),
+    MessageTabAll(),
+    ScheduleScreen(),
+    Profile_screen(),
   ];
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: pages[page],
-      bottomNavigationBar: AnimatedBottomNavigationBar(
-        icons: icons,
-        iconSize: 20,
-        activeIndex: page,
-        height: 80,
-        splashSpeedInMilliseconds: 300,
-        gapLocation: GapLocation.none,
-        activeColor: const Color.fromARGB(255, 0, 190, 165),
-        inactiveColor: const Color.fromARGB(255, 223, 219, 219),
-        onTap: (int tappedIndex) {
-          setState(() {
-            page = tappedIndex;
-          });
-        },
-      ),
-    );
+  void changePage(int tappedIndex) {
+    page = tappedIndex;
+    update();
   }
 }

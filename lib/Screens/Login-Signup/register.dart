@@ -1,19 +1,17 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:get/get.dart';
 import '../../constet.dart';
 import '../../crud.dart';
+import '../../doctor/Widgets/Auth_text_field.dart';
 import '../Views/Homepage.dart';
-import '../Widgets/Auth_text_field.dart';
-
 
 class RegisterStep1 extends StatefulWidget {
   const RegisterStep1({super.key});
-  static String id = "RegisterStep1";
+  static String id = "/RegisterStep1";
 
   @override
   State<RegisterStep1> createState() => _RegisterStep1State();
@@ -71,21 +69,15 @@ class _RegisterStep1State extends State<RegisterStep1> {
                 child: ElevatedButton(
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
-                      Navigator.push(
-                        context,
-                        PageTransition(
-                          type: PageTransitionType.fade,
-                          child: RegisterStepTwo(
-                            name: name.text,
-                            email: email.text,
-                            password: password.text,
-                            number: number.text,
-                            age: age.text,
-                            address: address.text,
-                            gender: selectedGender!,
-                          ),
-                        ),
-                      );
+                      Get.to(() => RegisterStepTwo(
+                        name: name.text,
+                        email: email.text,
+                        password: password.text,
+                        number: number.text,
+                        age: age.text,
+                        address: address.text,
+                        gender: selectedGender!,
+                      ));
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -107,7 +99,6 @@ class _RegisterStep1State extends State<RegisterStep1> {
   String? _validateEmail(String? value) => (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value ?? '')) ? "Enter a valid email" : null;
   String? _validatePassword(String? value) => (value != null && value.length < 6) ? "Password must be at least 6 characters" : null;
 }
-
 
 class RegisterStepTwo extends StatefulWidget {
   final String name, email, password, number, age, address, gender;
@@ -147,7 +138,7 @@ class _RegisterStepTwoState extends State<RegisterStepTwo> {
                   myfile = File(xfile.path);
                 });
               }
-              Navigator.pop(context);
+              Get.back();
             },
           ),
           ListTile(
@@ -160,7 +151,7 @@ class _RegisterStepTwoState extends State<RegisterStepTwo> {
                   myfile = File(xfile.path);
                 });
               }
-              Navigator.pop(context);
+              Get.back();
             },
           ),
         ],
@@ -189,7 +180,6 @@ class _RegisterStepTwoState extends State<RegisterStepTwo> {
         fileToSend,
       );
     } else {
-      // بدون صورة
       response = await _crud.postRequest(
         linkSignUp,
         {
@@ -200,7 +190,7 @@ class _RegisterStepTwoState extends State<RegisterStepTwo> {
           "age": widget.age,
           "address": widget.address,
           "gender": widget.gender,
-          "noimage": "1", // نبعته كإشارة إنه مفيش صورة
+          "noimage": "1",
         },
       );
     }
@@ -208,13 +198,10 @@ class _RegisterStepTwoState extends State<RegisterStepTwo> {
     setState(() => isLoading = false);
 
     if (response['status'] == "success") {
-      Navigator.pushReplacement(
-        context,
-        PageTransition(type: PageTransitionType.fade, child: Homepage()),
-      );
+      Get.offAll(() => Homepage());
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("فشل في إنشاء الحساب")),
+        const SnackBar(content: Text("Failed to create account")),
       );
     }
   }

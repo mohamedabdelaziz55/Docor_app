@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:get/get.dart';
 
 import '../../models/models_patient/model_doctors.dart';
 
-class list_doctor1 extends StatelessWidget {
-  const list_doctor1({required this.modelsDoctor, this.onPressed});
+class ListDoctor1 extends StatelessWidget {
+  const ListDoctor1({required this.modelsDoctor, this.onPressed});
 
   final ModelsDoctors modelsDoctor;
   final void Function()? onPressed;
@@ -18,7 +19,6 @@ class list_doctor1 extends StatelessWidget {
         padding: const EdgeInsets.all(6.0),
         child: Container(
           height: 100,
-          // width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             color: Color.fromARGB(255, 240, 236, 236),
@@ -72,10 +72,10 @@ class list_doctor1 extends StatelessWidget {
                               children: [
                                 Container(
                                   height:
-                                      MediaQuery.of(context).size.height *
+                                  MediaQuery.of(context).size.height *
                                       0.015,
                                   width:
-                                      MediaQuery.of(context).size.width * 0.03,
+                                  MediaQuery.of(context).size.width * 0.03,
                                   decoration: const BoxDecoration(
                                     image: DecorationImage(
                                       image: AssetImage(

@@ -1,12 +1,11 @@
-import 'package:doctor_app/Screens/Views/questions_screen.dart';
-import 'package:doctor_app/doctor/ViewsDoc/questions_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:get/get.dart';
 import '../../constet.dart';
 import '../../crud.dart';
+import 'questions_screen.dart';
 
 class AnserQuestionsScreen extends StatefulWidget {
   final dynamic modelAsk;
@@ -32,7 +31,8 @@ class _AnserQuestionsScreenState extends State<AnserQuestionsScreen> {
   @override
   void initState() {
     super.initState();
-    fetchDoctorInfo().then((_) => getComments());
+    fetchDoctorInfo();
+    getComments();
   }
 
   Future<void> fetchDoctorInfo() async {
@@ -59,7 +59,7 @@ class _AnserQuestionsScreenState extends State<AnserQuestionsScreen> {
             doctorName = fullComments.first['doc_name'] ?? doctorName;
             specialty = fullComments.first['doc_specialty'] ?? specialty;
             profileImage = fullComments.first['doc_profile'] ?? profileImage;
-            commentsList = fullComments.sublist(1); // باقي التعليقات
+            commentsList = fullComments.sublist(1);
           } else {
             answer = null;
             commentsList = [];
@@ -131,7 +131,6 @@ class _AnserQuestionsScreenState extends State<AnserQuestionsScreen> {
             padding: const EdgeInsets.all(12.0),
             child: Column(
               children: [
-                // السؤال
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(color: Colors.grey[200]),
@@ -167,10 +166,7 @@ class _AnserQuestionsScreenState extends State<AnserQuestionsScreen> {
                     ],
                   ),
                 ),
-
                 SizedBox(height: 16),
-
-                // الإجابة الرئيسية
                 if (answer != null)
                   Card(
                     elevation: 3,
@@ -242,10 +238,7 @@ class _AnserQuestionsScreenState extends State<AnserQuestionsScreen> {
                   )
                 else
                   Text("No answer yet"),
-
                 SizedBox(height: 20),
-
-                // باقي التعليقات
                 isLoading
                     ? Center(child: CircularProgressIndicator())
                     : ListView.builder(
@@ -330,7 +323,6 @@ class _AnserQuestionsScreenState extends State<AnserQuestionsScreen> {
                     );
                   },
                 ),
-
               ],
             ),
           ),

@@ -1,28 +1,23 @@
 import 'package:doctor_app/Screens/Views/questions_screen.dart';
 import 'package:doctor_app/crud.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
-
+import 'package:get/get.dart';
 import '../../constet.dart';
 import '../../main.dart';
 
-class AskScreen extends StatefulWidget {
-  const AskScreen({super.key});
-
-  @override
-  State<AskScreen> createState() => _AskScreenState();
-}
-
-class _AskScreenState extends State<AskScreen> {
+class AskController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController text = TextEditingController();
   final Crud _crud = Crud();
+
   Future<void> addPost() async {
-    final userId =  sp.getString("id");
-    print("User ID: $userId");
+    final userId = sp.getString("id");
     if (userId == null || text.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("الرجاء إدخال سؤال وتسجيل الدخول أولاً.")),
+      Get.snackbar(
+        "Error",
+        "Please enter a question and make sure you're logged in.",
+        backgroundColor: Colors.red.shade100,
+        colorText: Colors.black,
       );
       return;
     }
@@ -33,37 +28,37 @@ class _AskScreenState extends State<AskScreen> {
     });
 
     if (response["status"] == "success") {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("تم إرسال السؤال بنجاح")),
-      );
-      Navigator.pushReplacement(
-        context,
-        PageTransition(
-          type: PageTransitionType.rightToLeft,
-          child: QuestionsScreen(),
-        ),
+      Get.snackbar(
+        "Success",
+        "Question submitted successfully",
+        backgroundColor: Colors.green.shade100,
+        colorText: Colors.black,
       );
       text.clear();
+      Get.off(() => QuestionsScreen());
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("فشل إرسال السؤال. حاول مرة أخرى.")),
+      Get.snackbar(
+        "Error",
+        "Failed to submit question. Please try again.",
+        backgroundColor: Colors.red.shade100,
+        colorText: Colors.black,
       );
     }
   }
+}
+
+class AskScreen extends StatelessWidget {
+  const AskScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final AskController controller = Get.put(AskController());
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              PageTransition(
-                type: PageTransitionType.rightToLeft,
-                child: QuestionsScreen(),
-              ),
-            );
+            Get.off(() => QuestionsScreen());
           },
           icon: Icon(Icons.arrow_back_ios),
         ),
@@ -71,7 +66,7 @@ class _AskScreenState extends State<AskScreen> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Form(
-          key: formKey,
+          key: controller.formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -90,10 +85,10 @@ class _AskScreenState extends State<AskScreen> {
               ),
               SizedBox(height: 20),
               TextFormField(
-                controller: text,
+                controller: controller.text,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'يرجى إدخال عنوان.';
+                    return 'Please enter a title.';
                   }
                   return null;
                 },
@@ -122,8 +117,8 @@ class _AskScreenState extends State<AskScreen> {
               Center(
                 child: ElevatedButton(
                   onPressed: () async {
-                    if (formKey.currentState!.validate()) {
-                      await addPost();
+                    if (controller.formKey.currentState!.validate()) {
+                      await controller.addPost();
                     }
                   },
                   style: ElevatedButton.styleFrom(

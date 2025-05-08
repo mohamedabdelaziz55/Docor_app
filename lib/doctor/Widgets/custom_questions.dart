@@ -1,29 +1,24 @@
 import 'package:doctor_app/models/models_patient/model_date_json.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:get/get.dart';
 
 import '../../utils.dart';
 import '../ViewsDoc/anser_questions_screen.dart';
 
-class CustomQuestionsDoc extends StatefulWidget {
-  const CustomQuestionsDoc({super.key, required this.modelAsk, this.onTapEdit, this.onTapDelete});
+class CustomQuestionsDoc extends StatelessWidget {
+  const CustomQuestionsDoc({Key? key, required this.modelAsk, this.onTapEdit, this.onTapDelete}) : super(key: key);
 
   final Data modelAsk;
-final void Function()? onTapEdit;
-final void Function()? onTapDelete;
-  @override
-  _CustomQuestionsDocState createState() => _CustomQuestionsDocState();
-}
-
-class _CustomQuestionsDocState extends State<CustomQuestionsDoc> {
-  bool isExpanded = false;
-
+  final void Function()? onTapEdit;
+  final void Function()? onTapDelete;
 
   @override
   Widget build(BuildContext context) {
-    final questionText = widget.modelAsk.questionsText ?? 'لا يوجد محتوى';
-    final postDate = widget.modelAsk.postDate ?? '2023-01-01T00:00:00';
+    bool isExpanded = false;
+
+    final questionText = modelAsk.questionsText ?? 'No content available';
+    final postDate = modelAsk.postDate ?? '2023-01-01T00:00:00';
 
     return Padding(
       padding: const EdgeInsets.all(12.0),
@@ -57,7 +52,6 @@ class _CustomQuestionsDocState extends State<CustomQuestionsDoc> {
                     ),
                   ],
                 ),
-
               ],
             ),
 
@@ -73,18 +67,15 @@ class _CustomQuestionsDocState extends State<CustomQuestionsDoc> {
               ),
             ),
 
-            /// Read More
             if (questionText.length > 100)
               Align(
                 alignment: Alignment.centerLeft,
                 child: TextButton(
                   onPressed: () {
-                    setState(() {
-                      isExpanded = !isExpanded;
-                    });
+                    isExpanded = !isExpanded;
                   },
                   child: Text(
-                    isExpanded ? 'إظهار أقل' : 'اقرأ المزيد',
+                    isExpanded ? 'Show Less' : 'Read More',
                     style: const TextStyle(
                       fontSize: 13,
                       color: Color.fromARGB(255, 3, 190, 150),
@@ -96,36 +87,27 @@ class _CustomQuestionsDocState extends State<CustomQuestionsDoc> {
             const SizedBox(height: 10),
             const Divider(thickness: 0.6),
 
-            /// Bottom Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                /// Share
                 TextButton.icon(
                   onPressed: () {
+                    // Add share functionality
                   },
                   icon: const Icon(Icons.share, size: 18, color: Color.fromARGB(255, 3, 190, 150)),
                   label: const Text(
-                    'مشاركة',
+                    'Share',
                     style: TextStyle(color: Color.fromARGB(255, 3, 190, 150)),
                   ),
                 ),
 
-                /// Comments
                 TextButton.icon(
                   onPressed: () {
-
-                    Navigator.pushReplacement(
-                      context,
-                      PageTransition(
-                        type: PageTransitionType.rightToLeft,
-                        child:  AnswerQuestionsScreenDoc(modelAsk: widget.modelAsk,), // Replace with comment screen
-                      ),
-                    );
+                    Get.to(() => AnswerQuestionsScreenDoc(modelAsk: modelAsk));
                   },
                   icon: const Icon(CupertinoIcons.chat_bubble_text, size: 18, color: Color.fromARGB(255, 3, 190, 150)),
                   label: const Text(
-                    'تعليقات',
+                    'Comments',
                     style: TextStyle(color: Color.fromARGB(255, 3, 190, 150)),
                   ),
                 ),

@@ -2,6 +2,7 @@ import 'package:doctor_app/doctor/ViewsDoc/add_articles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:get/get.dart';
 import 'dart:typed_data';
 import '../../Screens/Widgets/custom_card_articles.dart';
 import '../../constet.dart';
@@ -44,13 +45,9 @@ class _ArticlesDocScreenState extends State<ArticlesDocScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () { Navigator.push(
-          context,
-          PageTransition(
-            type: PageTransitionType.rightToLeft,
-            child: AddArticles(), // هنا خلي بالك تغير اسم الشاشة حسب اللي عندك
-          ),
-        );},
+        onPressed: () {
+          Get.to(() => AddArticles());
+        },
         child: Icon(CupertinoIcons.plus),
       ),
       body: RefreshIndicator(

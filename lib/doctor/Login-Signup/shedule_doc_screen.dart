@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
-import '../../doctor/ViewsDoc/shedule_tab1.dart';
-import '../Views/shedule_tab1.dart';
-import '../Views/shedule_tab2.dart';
 
-class ScheduleScreen extends StatefulWidget {
-  static String id = "schedule_screen";
+import '../../Screens/Views/shedule_tab1.dart';
+import '../../Screens/Views/shedule_tab2.dart';
+
+
+class ScheduleDocScreen extends StatefulWidget {
+  static String id = "ScheduleDocScreen";
 
   @override
-  _ScheduleScreenState createState() => _ScheduleScreenState();
+  _ScheduleDocScreenState createState() => _ScheduleDocScreenState();
 }
 
-class _ScheduleScreenState extends State<ScheduleScreen> with SingleTickerProviderStateMixin {
+class _ScheduleDocScreenState extends State<ScheduleDocScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override

@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import '../../constet.dart';
 import '../../doctor/ViewsDoc/HomepageDoc.dart';
+import '../../doctor/ViewsDoc/artcles.dart';
 import '../../doctor/ViewsDoc/articles_doc_screen.dart';
 import '../../doctor/ViewsDoc/edit_articles.dart';
 import '../../models/models_patient/model_doctors.dart';
 import '../../utils.dart';
 import '../../crud.dart';
 import '../Views/artcles.dart';
+
+class CustomCardArticlesController extends GetxController {
+  // Any state management or actions for articles can go here
+}
 
 class CustomCardArticles extends StatelessWidget {
   CustomCardArticles({Key? key, required this.dataM}) : super(key: key);
@@ -19,6 +25,8 @@ class CustomCardArticles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final CustomCardArticlesController controller = Get.put(CustomCardArticlesController());
+
     return FutureBuilder<String?>(
       future: _getCurrentUserId(),
       builder: (context, snapshot) {
@@ -39,7 +47,7 @@ class CustomCardArticles extends StatelessWidget {
               context,
               PageTransition(
                 type: PageTransitionType.rightToLeft,
-                child: ArticleDetailsScreen(dataArtices: dataM),
+                child: ArticleDetailsDocScreen(dataArtices: dataM),
               ),
             );
           },
@@ -49,7 +57,7 @@ class CustomCardArticles extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
+                  color: Colors.black.withOpacity(0.2),
                   blurRadius: 10,
                   offset: const Offset(0, 5),
                 ),
@@ -65,13 +73,22 @@ class CustomCardArticles extends StatelessWidget {
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: 250,
+                    imageErrorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: double.infinity,
+                        height: 250,
+                        color: Colors.grey.shade300,
+                        child: Icon(Icons.broken_image, size: 50, color: Colors.grey),
+                      );
+                    },
                   ),
+
                   Container(
                     height: 250,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Colors.black.withValues(alpha: 0.6),
+                          Colors.black.withOpacity(0.6),
                           Colors.transparent,
                         ],
                         begin: Alignment.bottomCenter,
@@ -149,7 +166,6 @@ class CustomCardArticles extends StatelessWidget {
     );
   }
 
-  // تأكيد الحذف باستخدام AwesomeDialog
   void _showDeleteConfirmation(BuildContext context) {
     AwesomeDialog(
       context: context,
@@ -164,11 +180,12 @@ class CustomCardArticles extends StatelessWidget {
         await deleteArticle(dataM.id.toString(), dataM.imageArticles ?? '');
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) =>  HomepageDoc()),
+          MaterialPageRoute(builder: (context) => HomepageDoc()),
         );
       },
     ).show();
   }
+
   Future<void> deleteArticle(String articleId, String imageName) async {
     await _crud.postRequest(linkDeleteArtices, {
       "id": articleId,

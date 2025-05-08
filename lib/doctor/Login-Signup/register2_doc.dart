@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:doctor_app/doctor/Login-Signup/login_doc.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../constet.dart';
@@ -132,7 +133,7 @@ class _RegisterDoctorStep2State extends State<RegisterDoctorStep2> {
 
       Navigator.pushReplacement(
         context,
-        PageTransition(type: PageTransitionType.fade, child: HomepageDoc()),
+        PageTransition(type: PageTransitionType.fade, child: LoginDoc()),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

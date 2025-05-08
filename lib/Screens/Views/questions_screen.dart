@@ -9,20 +9,14 @@ import '../../main.dart';
 import '../../models/models_patient/model_date_json.dart';
 import '../Widgets/custom_questions.dart';
 import 'ask_screen.dart';
+import 'package:get/get.dart';
 
-class QuestionsScreen extends StatefulWidget {
-  const QuestionsScreen({super.key});
-
-  @override
-  State<QuestionsScreen> createState() => _QuestionsScreenState();
-}
-
-class _QuestionsScreenState extends State<QuestionsScreen> {
+class QuestionsScreenController extends GetxController {
   Crud _crud = Crud();
 
   Future<ModelDateJson> getView() async {
     var response = await _crud.postRequest(linkView, {
-      "id":  sp.getString("id"),
+      "id": sp.getString("id"),
     });
     return ModelDateJson.fromJson(response);
   }
@@ -31,17 +25,21 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
     var response = await _crud.postRequest(linkDelete, {"questions_id": noteId});
     return response;
   }
+}
+
+class QuestionsScreen extends StatelessWidget {
+  const QuestionsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-      automaticallyImplyLeading: true,
+        automaticallyImplyLeading: true,
       ),
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: RefreshIndicator(
         onRefresh: () async {
-          setState(() {});
+          // Trigger a refresh
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -49,69 +47,74 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
             child: Column(
               children: [
                 const CustomCon(),
-                FutureBuilder<ModelDateJson>(
-                  future: getView(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else if (snapshot.hasData && snapshot.data?.data != null) {
-                      var ask = snapshot.data!.data!;
-                      if (ask.isEmpty) {
-                        return const Center(
-                          child: Text('No posts available', style: TextStyle(fontSize: 16)),
-                        );
-                      }
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: ask.length,
-                        itemBuilder: (context, index) {
-                          Data noteData = ask[index];
-                          return CustomQuestions(
-                            onTapEdit: () {
-                              Navigator.pushReplacement(
-                                context,
-                                PageTransition(
-                                  type: PageTransitionType.rightToLeft,
-                                  child: EditAskScreen(post: noteData.toJson()),
-                                ),
-                              );
-                            },
-                            modelAsk: noteData,
-                            onTapDelete: () async {
-                              bool? confirmDelete = await showDialog<bool>(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Text('تأكيد الحذف'),
-                                    content: const Text('هل تريد حذف هذه الملاحظة؟'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () => Navigator.of(context).pop(false),
-                                        child: const Text('إلغاء'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () => Navigator.of(context).pop(true),
-                                        child: const Text('حذف'),
-                                      ),
-                                    ],
+                GetBuilder<QuestionsScreenController>(
+                  init: QuestionsScreenController(),
+                  builder: (controller) {
+                    return FutureBuilder<ModelDateJson>(
+                      future: controller.getView(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(child: Text('Error: ${snapshot.error}'));
+                        } else if (snapshot.hasData && snapshot.data?.data != null) {
+                          var ask = snapshot.data!.data!;
+                          if (ask.isEmpty) {
+                            return const Center(
+                              child: Text('No posts available', style: TextStyle(fontSize: 16)),
+                            );
+                          }
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: ask.length,
+                            itemBuilder: (context, index) {
+                              Data noteData = ask[index];
+                              return CustomQuestions(
+                                onTapEdit: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    PageTransition(
+                                      type: PageTransitionType.rightToLeft,
+                                      child: EditAskScreen(post: noteData.toJson()),
+                                    ),
                                   );
                                 },
-                              );
+                                modelAsk: noteData,
+                                onTapDelete: () async {
+                                  bool? confirmDelete = await showDialog<bool>(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Confirm Deletion'),
+                                        content: const Text('Do you want to delete this note?'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () => Navigator.of(context).pop(false),
+                                            child: const Text('Cancel'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () => Navigator.of(context).pop(true),
+                                            child: const Text('Delete'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
 
-                              if (confirmDelete == true) {
-                                await deleteNote(noteData.questionsId ?? '');
-                                setState(() {}); // إعادة تحميل البيانات بعد الحذف
-                              }
+                                  if (confirmDelete == true) {
+                                    await controller.deleteNote(noteData.questionsId ?? '');
+                                    Get.find<QuestionsScreenController>().update(); // Reload the data after deletion
+                                  }
+                                },
+                              );
                             },
                           );
-                        },
-                      );
-                    } else {
-                      return const Center(child: Text('No data available'));
-                    }
+                        } else {
+                          return const Center(child: Text('No data available'));
+                        }
+                      },
+                    );
                   },
                 ),
               ],

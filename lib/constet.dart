@@ -5,6 +5,7 @@ const String linkSignUp = "$linkServerName/auth/singup.php";
 const String docSignUp = "$linkServerName/auth/singupDoc.php";
 const String doclogin = "$linkServerName/auth/logindoc.php";
 const String linklogin = "$linkServerName/auth/login.php";
+const String linkEditProfile = "$linkServerName/auth/updateprofile.php";
 //questions
 const String linkAdd = "$linkServerName/questions/add.php";
 const String linkView = "$linkServerName/questions/select.php";

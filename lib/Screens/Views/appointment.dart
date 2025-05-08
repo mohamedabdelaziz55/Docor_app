@@ -2,17 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:get/get.dart'; // Add GetX dependency
 import '../../models/models_patient/model_doctors.dart';
 import '../Widgets/doctorList.dart';
 import 'doctor_details_screen.dart';
 
-class appointment extends StatelessWidget {
+class AppointmentController extends GetxController {
+  Rx<ModelsDoctors> doctor = ModelsDoctors(
+    about: 'About the doctor...',
+    supText: 'Specialization text...',
+    name: 'Doctor Name',
+    image: 'path_to_image',
+    id: 123,
+    address: 'Doctor\'s address',
+    star: 4.5,
+  ).obs; // Rx variable for doctor data
+  RxString appointmentDate = 'Wednesday, Jun 23, 2021 | 10:00 AM'.obs; // Rx variable for date
+  RxString reason = 'Chest pain'.obs; // Rx variable for reason
+  RxDouble consultationFee = 60.0.obs;
+  RxDouble adminFee = 1.0.obs;
+  RxDouble totalFee = 61.0.obs;
+  RxString paymentMethod = 'Visa'.obs;
+}
+
+class Appointment extends StatelessWidget {
   final ModelsDoctors modlesDoctors;
 
-  const appointment({super.key, required this.modlesDoctors});
+  const Appointment({Key? key, required this.modlesDoctors}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Initialize GetX controller
+    final controller = Get.put(AppointmentController());
+    controller.doctor.value = modlesDoctors; // Set doctor data
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -64,12 +86,12 @@ class appointment extends StatelessWidget {
             Column(
               children: [
                 const SizedBox(height: 5),
-                doctorList(
+                DoctorList(
                   distance: "800m away",
-                  image: modlesDoctors.image,
-                  maintext: modlesDoctors.name,
-                  numRating: '${modlesDoctors.star}',
-                  subtext: modlesDoctors.supText,
+                  image: controller.doctor.value.image,
+                  mainText: controller.doctor.value.name,
+                  numRating: '${controller.doctor.value.star}',
+                  subText: controller.doctor.value.supText,
                 ),
                 const SizedBox(height: 10),
                 Padding(
@@ -85,13 +107,18 @@ class appointment extends StatelessWidget {
                           letterSpacing: 1,
                         ),
                       ),
-                      Text(
-                        "Change",
-                        style: GoogleFonts.inter(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 0,
-                          color: const Color.fromARGB(137, 56, 56, 56),
+                      GestureDetector(
+                        onTap: () {
+                          // Add logic to change date if needed
+                        },
+                        child: Text(
+                          "Change",
+                          style: GoogleFonts.inter(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 0,
+                            color: const Color.fromARGB(137, 56, 56, 56),
+                          ),
                         ),
                       ),
                     ],
@@ -116,39 +143,44 @@ class appointment extends StatelessWidget {
                       ),
                       SizedBox(width: 10),
                       Expanded(
-                        child: Text(
-                          "Wednesday, Jun 23, 2021 | 10:00 AM",
+                        child: Obx(() => Text(
+                          controller.appointmentDate.value,
                           style: GoogleFonts.poppins(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w500,
                             color: Colors.black87,
                           ),
-                        ),
+                        )),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Reasion",
+                        "Reason",
                         style: GoogleFonts.inter(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 1,
                         ),
                       ),
-                      Text(
-                        "Change",
-                        style: GoogleFonts.inter(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 0,
-                          color: const Color.fromARGB(137, 56, 56, 56),
+                      GestureDetector(
+                        onTap: () {
+                          // Add logic to change reason if needed
+                        },
+                        child: Text(
+                          "Change",
+                          style: GoogleFonts.inter(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 0,
+                            color: const Color.fromARGB(137, 56, 56, 56),
+                          ),
                         ),
                       ),
                     ],
@@ -177,14 +209,14 @@ class appointment extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 10),
-                      Text(
-                        "Chest pain",
+                      Obx(() => Text(
+                        controller.reason.value,
                         style: GoogleFonts.poppins(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.black87,
                         ),
-                      ),
+                      )),
                     ],
                   ),
                 ),
@@ -222,7 +254,10 @@ class appointment extends StatelessWidget {
                           color: Colors.black54,
                         ),
                       ),
-                      Text("\$60", style: GoogleFonts.poppins(fontSize: 16.sp)),
+                      Obx(() => Text(
+                        "\$${controller.consultationFee.value}",
+                        style: GoogleFonts.poppins(fontSize: 16.sp),
+                      )),
                     ],
                   ),
                 ),
@@ -239,10 +274,10 @@ class appointment extends StatelessWidget {
                           color: Colors.black54,
                         ),
                       ),
-                      Text(
-                        "\$01.00",
+                      Obx(() => Text(
+                        "\$${controller.adminFee.value}",
                         style: GoogleFonts.poppins(fontSize: 16.sp),
-                      ),
+                      )),
                     ],
                   ),
                 ),
@@ -253,13 +288,16 @@ class appointment extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Aditional Discount",
+                        "Additional Discount",
                         style: GoogleFonts.poppins(
                           fontSize: 15.sp,
                           color: Colors.black54,
                         ),
                       ),
-                      Text("-", style: GoogleFonts.poppins(fontSize: 16.sp)),
+                      Obx(() => Text(
+                        "-",
+                        style: GoogleFonts.poppins(fontSize: 16.sp),
+                      )),
                     ],
                   ),
                 ),
@@ -277,14 +315,14 @@ class appointment extends StatelessWidget {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      Text(
-                        "\$61.00",
+                      Obx(() => Text(
+                        "\$${controller.totalFee.value}",
                         style: GoogleFonts.poppins(
                           fontSize: 16.sp,
                           color: Color.fromARGB(255, 4, 92, 58),
                           fontWeight: FontWeight.w600,
                         ),
-                      ),
+                      )),
                     ],
                   ),
                 ),
@@ -314,15 +352,15 @@ class appointment extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          "Visa",
+                        Obx(() => Text(
+                          controller.paymentMethod.value,
                           style: GoogleFonts.inter(
                             fontStyle: FontStyle.italic,
                             fontSize: 17.sp,
                             fontWeight: FontWeight.w600,
                             color: Color.fromARGB(255, 38, 39, 117),
                           ),
-                        ),
+                        )),
                         Text(
                           "Change",
                           style: GoogleFonts.inter(
@@ -361,40 +399,35 @@ class appointment extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(height: 5),
-                              Text(
-                                "  \$61",
+                              Obx(() => Text(
+                                "\$${controller.totalFee.value}",
                                 style: GoogleFonts.inter(
                                   fontSize: 19,
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: 0,
                                   color: Colors.black87,
                                 ),
-                              ),
+                              )),
                             ],
                           ),
                         ),
-                        SizedBox(width: 10),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Container(
-                            height: MediaQuery.of(context).size.height * 0.06,
-                            width: MediaQuery.of(context).size.width * 0.4300,
-                            decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 2, 179, 149),
-                              borderRadius: BorderRadius.circular(30),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 45, vertical: 15), backgroundColor: const Color.fromARGB(255, 4, 92, 58),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20)),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Book",
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 15.sp,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
+                            child: Text(
+                              'Book Appointment',
+                              style: GoogleFonts.inter(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),

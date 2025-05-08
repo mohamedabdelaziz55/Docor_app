@@ -1,10 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-import 'package:doctor_app/constet.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -15,15 +14,15 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController numberController = TextEditingController();
-  TextEditingController ageController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
-  String gender = "ذكر";
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final numberController = TextEditingController();
+  final ageController = TextEditingController();
+  final addressController = TextEditingController();
 
   File? imageFile;
   String? existingImage;
+  String gender = "Male";
 
   @override
   void initState() {
@@ -31,94 +30,52 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     loadUserData();
   }
 
-  void loadUserData() async {
-    SharedPreferences sp = await SharedPreferences.getInstance();
+  Future<void> loadUserData() async {
+    final sp = await SharedPreferences.getInstance();
     setState(() {
       nameController.text = sp.getString("name") ?? "";
       emailController.text = sp.getString("email") ?? "";
       numberController.text = sp.getString("number") ?? "";
       ageController.text = sp.getString("age") ?? "";
       addressController.text = sp.getString("address") ?? "";
-      gender = sp.getString("gender") ?? "ذكر";
+      gender = (sp.getString("gender") == "ذكر") ? "Male" : "Female";
       existingImage = sp.getString("profile_image");
     });
   }
 
   Future<void> pickImage() async {
-    final pickedImage =
-    await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
+    final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (picked != null) {
       setState(() {
-        imageFile = File(pickedImage.path);
+        imageFile = File(picked.path);
       });
     }
   }
 
   Future<void> updateProfile() async {
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    final id = sp.getString("id");
+    final prefs = await SharedPreferences.getInstance();
 
-    if (id == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("حدث خطأ، لم يتم العثور على معرف المستخدم")),
-      );
-      return;
-    }
-
-    final uri = Uri.parse("");
-    var request = http.MultipartRequest('POST', uri);
-    request.fields['id'] = id;
-    request.fields['name'] = nameController.text;
-    request.fields['email'] = emailController.text;
-    request.fields['number'] = numberController.text;
-    request.fields['age'] = ageController.text;
-    request.fields['address'] = addressController.text;
-    request.fields['gender'] = gender;
+    // تخزين البيانات المحلية
+    prefs.setString("name", nameController.text);
+    prefs.setString("email", emailController.text);
+    prefs.setString("number", numberController.text);
+    prefs.setString("age", ageController.text);
+    prefs.setString("address", addressController.text);
+    prefs.setString("gender", gender);
 
     if (imageFile != null) {
-      request.files.add(
-        await http.MultipartFile.fromPath('profile_image', imageFile!.path),
-      );
+      // إذا تم تحديد صورة جديدة، نقوم بتخزين المسار المحلي للصورة
+      prefs.setString("profile_image", imageFile!.path);
     }
 
-    final response = await request.send();
-    final resBody = await response.stream.bytesToString();
-
-    print("Response Body: $resBody");
-    print("Status Code: ${response.statusCode}");
-
-    if (response.statusCode == 200) {
-      final newImageName =
-      imageFile != null ? imageFile!.path.split("/").last : existingImage;
-
-      await sp.setString("name", nameController.text);
-      await sp.setString("email", emailController.text);
-      await sp.setString("number", numberController.text);
-      await sp.setString("age", ageController.text);
-      await sp.setString("address", addressController.text);
-      await sp.setString("gender", gender);
-      if (newImageName != null) {
-        await sp.setString("profile_image", newImageName);
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("تم تحديث البيانات بنجاح")),
-      );
-      Navigator.pop(context);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("فشل في تحديث البيانات")),
-      );
-    }
+    Get.snackbar("Success", "Profile updated locally", snackPosition: SnackPosition.BOTTOM);
+    Get.back();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("تعديل الملف الشخصي"),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text("Edit Profile"), centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -131,38 +88,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   radius: 50,
                   backgroundImage: imageFile != null
                       ? FileImage(imageFile!)
-                      : existingImage != null
-                      ? NetworkImage("$imageRoot/$existingImage")
-                  as ImageProvider
-                      : const AssetImage("assets/icons/avatar.png"),
+                      : (existingImage != null
+                      ? FileImage(File(existingImage!))
+                      : const AssetImage("assets/icons/avatar.png")) as ImageProvider,
                 ),
               ),
               const SizedBox(height: 20),
-              buildTextField(nameController, "الاسم"),
-              buildTextField(emailController, "البريد الإلكتروني"),
-              buildTextField(numberController, "رقم الهاتف",
-                  keyboardType: TextInputType.phone),
-              buildTextField(ageController, "العمر",
-                  keyboardType: TextInputType.number),
-              buildTextField(addressController, "العنوان"),
+              buildTextField(nameController, "Name"),
+              buildTextField(emailController, "Email"),
+              buildTextField(numberController, "Phone Number", keyboardType: TextInputType.phone),
+              buildTextField(ageController, "Age", keyboardType: TextInputType.number),
+              buildTextField(addressController, "Address"),
               const SizedBox(height: 10),
               DropdownButtonFormField<String>(
                 value: gender,
-                items: ['ذكر', 'أنثى'].map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value, style: TextStyle(fontSize: 17.sp)),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    gender = value!;
-                  });
-                },
+                items: ['Male', 'Female']
+                    .map((g) => DropdownMenuItem(value: g, child: Text(g, style: TextStyle(fontSize: 17.sp))))
+                    .toList(),
+                onChanged: (val) => setState(() => gender = val!),
                 decoration: InputDecoration(
-                  labelText: "النوع",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15)),
+                  labelText: "Gender",
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
                 ),
               ),
               const SizedBox(height: 30),
@@ -176,7 +122,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   backgroundColor: const Color(0xFF03BE96),
                   padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
-                child: Text("حفظ التعديل", style: TextStyle(fontSize: 17.sp)),
+                child: Text("Save", style: TextStyle(fontSize: 17.sp)),
               ),
             ],
           ),
@@ -196,12 +142,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           labelText: label,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
         ),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return "هذا الحقل مطلوب";
-          }
-          return null;
-        },
+        validator: (value) => (value == null || value.isEmpty) ? "Required field" : null,
       ),
     );
   }

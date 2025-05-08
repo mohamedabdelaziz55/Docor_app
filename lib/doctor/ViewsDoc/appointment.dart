@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import '../../Screens/Views/doctor_details_screen.dart';
 import '../../Screens/Widgets/doctorList.dart';
 import '../../models/models_patient/model_doctors.dart';
-import 'doctor_details_screen.dart';
 
-class appointment extends StatelessWidget {
-  final ModelsDoctors modlesDoctors;
+class Appointment extends StatelessWidget {
+  final ModelsDoctors modelsDoctors;
 
-  const appointment({super.key, required this.modlesDoctors});
+  const Appointment({super.key, required this.modelsDoctors});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class appointment extends StatelessWidget {
               context,
               PageTransition(
                 type: PageTransitionType.fade,
-                child: DoctorDetails(doctor: modlesDoctors),
+                child: DoctorDetails(doctor: modelsDoctors),
               ),
             );
           },
@@ -64,12 +64,12 @@ class appointment extends StatelessWidget {
             Column(
               children: [
                 const SizedBox(height: 5),
-                doctorList(
+                DoctorList(
                   distance: "800m away",
-                  image: modlesDoctors.image,
-                  maintext: modlesDoctors.name,
-                  numRating: '${modlesDoctors.star}',
-                  subtext: modlesDoctors.supText,
+                  image: modelsDoctors.image,
+                  mainText: modelsDoctors.name,
+                  numRating: '${modelsDoctors.star}',
+                  subText: modelsDoctors.supText,
                 ),
                 const SizedBox(height: 10),
                 Padding(
@@ -135,7 +135,7 @@ class appointment extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Reasion",
+                        "Reason",
                         style: GoogleFonts.inter(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
@@ -253,7 +253,7 @@ class appointment extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Aditional Discount",
+                        "Additional Discount",
                         style: GoogleFonts.poppins(
                           fontSize: 15.sp,
                           color: Colors.black54,

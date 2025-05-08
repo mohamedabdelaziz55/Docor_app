@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class tab1 extends StatelessWidget {
-  const tab1({super.key});
+class Tab1Controller extends GetxController {
+  // Here you can manage any variables or actions needed for the screen
+}
+
+class Tab1 extends StatelessWidget {
+  const Tab1({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final Tab1Controller controller = Get.put(Tab1Controller());
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(children: [
@@ -47,7 +54,7 @@ class tab1 extends StatelessWidget {
         ),
         Container(
           height: MediaQuery.of(context).size.height * 0.05,
-          width: MediaQuery.of(context).size.width * 01,
+          width: MediaQuery.of(context).size.width * 1,
           child: ElevatedButton(
             onPressed: () {
               // Perform verification or other actions here

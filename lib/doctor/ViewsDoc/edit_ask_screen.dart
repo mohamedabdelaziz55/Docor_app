@@ -2,12 +2,13 @@ import 'package:doctor_app/Screens/Views/questions_screen.dart';
 import 'package:doctor_app/crud.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:get/get.dart';
 import '../../constet.dart';
 import '../../main.dart';
 
 class EditAskScreen extends StatefulWidget {
   const EditAskScreen({super.key, this.post});
-  final dynamic post; // التأكد من أن النوع صحيح
+  final dynamic post; // Ensure the type is correct
 
   @override
   State<EditAskScreen> createState() => _EditAskScreenState();
@@ -25,21 +26,20 @@ class _EditAskScreenState extends State<EditAskScreen> {
 
     if (userId == null || text.text.trim().isEmpty || postId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("الرجاء إدخال سؤال وتسجيل الدخول أولاً.")),
+        SnackBar(content: Text("Please enter a question and log in first.")),
       );
       return;
     }
 
     try {
       var response = await _crud.postRequest(linkEdit, {
-        "questions_id": widget.post['questions_id'].toString(), // <-- مهم جداً
+        "questions_id": widget.post['questions_id'].toString(),
         "questions_text": text.text,
       });
 
-
       if (response != null && response["status"] == "success") {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("تم تعديل السؤال بنجاح")),
+          SnackBar(content: Text("Question edited successfully")),
         );
         Navigator.pushReplacement(
           context,
@@ -51,13 +51,13 @@ class _EditAskScreenState extends State<EditAskScreen> {
         text.clear();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("فشل التعديل. حاول مرة أخرى.")),
+          SnackBar(content: Text("Edit failed. Please try again.")),
         );
       }
     } catch (e) {
       print("Error parsing response: $e");
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("حدث خطأ في الاتصال بالخادم.")),
+        SnackBar(content: Text("There was an error connecting to the server.")),
       );
     }
   }
@@ -65,9 +65,9 @@ class _EditAskScreenState extends State<EditAskScreen> {
   @override
   void initState() {
     super.initState();
-    // تعيين نص السؤال عند بدء الشاشة
+    // Set question text when screen starts
     if (widget.post != null) {
-      text.text = widget.post['questions_text'] ?? ''; // استخدام questions_text
+      text.text = widget.post['questions_text'] ?? ''; // Using questions_text
     }
   }
 
@@ -113,7 +113,7 @@ class _EditAskScreenState extends State<EditAskScreen> {
                 controller: text,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'يرجى إدخال عنوان.';
+                    return 'Please enter a title.';
                   }
                   return null;
                 },

@@ -1,80 +1,77 @@
 import 'dart:convert';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:doctor_app/Screens/Login-Signup/register.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:page_transition/page_transition.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import '../../constet.dart';
 import '../../crud.dart';
 import '../../doctor/Login-Signup/login_doc.dart';
+import '../../doctor/Widgets/Auth_text_field.dart';
+import '../../doctor/Widgets/auth_social_login.dart';
 import '../../main.dart';
 import '../Views/Homepage.dart';
-import '../Widgets/Auth_text_field.dart';
-import '../Widgets/auth_social_login.dart';
 import 'forgot_pass.dart';
 import 'login_signup.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
-class login extends StatefulWidget {
-  const login({super.key});
-static String id="login";
-  @override
-  State<login> createState() => _loginState();
-}
-
-class _loginState extends State<login> {
+class LoginController extends GetxController {
   final Crud _crud = Crud();
   final GlobalKey<FormState> formKey = GlobalKey();
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
 
-  bool isLoading = false;
+  var isLoading = false.obs;
 
   Future<void> login() async {
     if (formKey.currentState!.validate()) {
-      setState(() => isLoading = true);
+      isLoading.value = true;
 
-      var response = await _crud.postRequest(linklogin, {
-        "email": email.text,
-        "password": password.text,
-      });
+      try {
+        var response = await _crud.postRequest(linklogin, {
+          "email": email.text,
+          "password": password.text,
+        });
 
-      setState(() => isLoading = false);
+        isLoading.value = false;
 
-      if (response == null) {
-        print("خطأ: لم يتم استلام استجابة من السيرفر.");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("فشل الاتصال بالخادم")),
-        );
-        return;
-      }
+        if (response == null) {
+          print("Error: No response from server.");
+          Get.snackbar("Error", "Failed to connect to the server");
+          return;
+        }
 
-      print("استجابة السيرفر: $response");
+        print("Server response: $response");
 
-      if (response['status'] == "success") {
-        await  sp.setString("id", response['data']['id'].toString());
-        await  sp.setString("name", response['data']['name']);
-        await  sp.setString("email", response['data']['email']);
-        await  sp.setString("number", response['data']['number']);
-        await  sp.setString("age", response['data']['age']);
-        await  sp.setString("address", response['data']['address']);
-        await  sp.setString("gender", response['data']['gender']);
-        await  sp.setString("profile_image", response['data']['profile_image']);
+        if (response['status'] == "success") {
+          await sp.setString("id", response['data']['id'].toString());
+          await sp.setString("name", response['data']['name']);
+          await sp.setString("email", response['data']['email']);
+          await sp.setString("number", response['data']['number']);
+          await sp.setString("age", response['data']['age']);
+          await sp.setString("address", response['data']['address']);
+          await sp.setString("gender", response['data']['gender']);
+          await sp.setString("profile_image", response['data']['profile_image']);
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Homepage()),
-        );
-      }
-      else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("فشل تسجيل الدخول")),
-        );
+          Get.offAll(() => Homepage());
+        } else {
+          Get.snackbar("Login Failed", response['message'] ?? "Invalid credentials");
+        }
+      } catch (e) {
+        isLoading.value = false;
+        print("Error: $e");
+        Get.snackbar("Error", "Something went wrong");
       }
     }
   }
+}
+
+class login extends StatelessWidget {
+  login({Key? key}) : super(key: key);
+  static String id = "/login";
+  final LoginController controller = Get.put(LoginController());
 
   @override
   Widget build(BuildContext context) {
@@ -88,13 +85,7 @@ class _loginState extends State<login> {
             child: Image.asset("assets/icons/back2.png"),
           ),
           onPressed: () {
-            Navigator.push(
-              context,
-              PageTransition(
-                type: PageTransitionType.leftToRight,
-                child: login_signup(),
-              ),
-            );
+            Get.to(() => const login_signup(), transition: Transition.leftToRight);
           },
         ),
         centerTitle: true,
@@ -115,56 +106,69 @@ class _loginState extends State<login> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Form(
-            key: formKey,
+            key: controller.formKey,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 40),
-                //Text field Login import from Auth_text_field widget
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "W",
+                      style: TextStyle(
+                        fontSize: 22.sp,
+                        fontWeight: FontWeight.bold,
+                        color: const Color.fromARGB(255, 3, 190, 150),
+                      ),
+                    ),
+                Text(
+                  "elcome",
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                  ],
+                ),
+                const SizedBox(height: 30),
                 Auth_text_field(
-                  controller: email,
+                  controller: controller.email,
                   text: "Enter your email",
                   icon: "assets/icons/email.png",
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "يرجى إدخال البريد الإلكتروني";
+                      return "Please enter your email";
                     }
-                    // التحقق من صحة البريد الإلكتروني باستخدام تعبير منتظم (Regex)
                     if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                      return "يرجى إدخال بريد إلكتروني صالح";
+                      return "Please enter a valid email address";
                     }
-                    return null; // ✅ البيانات سليمة
+                    return null;
                   },
                 ),
                 const SizedBox(height: 10),
-
                 Auth_text_field(
-                  controller: password,
+                  controller: controller.password,
                   text: "Enter your password",
                   icon: "assets/icons/lock.png",
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "يرجى إدخال كلمة المرور";
+                      return "Please enter your password";
                     }
                     if (value.length < 6) {
-                      return "يجب أن تكون كلمة المرور على الأقل 6 أحرف";
+                      return "Password must be at least 6 characters";
                     }
-                    return null; // ✅ البيانات سليمة
+                    return null;
                   },
                 ),
                 const SizedBox(height: 10),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                            type: PageTransitionType.bottomToTop,
-                            child: forgot_pass(),
-                          ),
-                        );
+                        Get.to(() => ForgotPassController(), transition: Transition.downToUp);
                       },
                       child: Text(
                         "Forgot your password?",
@@ -178,39 +182,33 @@ class _loginState extends State<login> {
                   ],
                 ),
                 SizedBox(height: 10),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      await login();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 3, 190, 150),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                Obx(() {
+                  return Container(
+                    height: MediaQuery.of(context).size.height * 0.05,
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: ElevatedButton(
+                      onPressed: controller.login,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 3, 190, 150),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                      child: controller.isLoading.value
+                          ? const CircularProgressIndicator()
+                          : Text(
+                        "Login",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          fontSize: 18.sp,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0,
+                        ),
                       ),
                     ),
-                    child: GestureDetector(
-                      onTap: () async {
-                        await login();
-                      },
-                      child:
-                          isLoading == true
-                              ? CircularProgressIndicator()
-                              : Text(
-                                "login",
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 18.sp,
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                  fontWeight: FontWeight.w500,
-                                  letterSpacing: 0,
-                                ),
-                              ),
-                    ),
-                  ),
-                ),
+                  );
+                }),
                 SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -224,13 +222,7 @@ class _loginState extends State<login> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                            type: PageTransitionType.rightToLeft,
-                            child: RegisterStep1(),
-                          ),
-                        );
+                        Get.to(() => RegisterStep1(), transition: Transition.rightToLeft);
                       },
                       child: Text(
                         "Sign Up",
@@ -242,7 +234,8 @@ class _loginState extends State<login> {
                       ),
                     ),
                   ],
-                ),                 SizedBox(height: 15),
+                ),
+                SizedBox(height: 15),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -255,13 +248,7 @@ class _loginState extends State<login> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                            type: PageTransitionType.rightToLeft,
-                            child: login_Doc(), // هنا خلي بالك تغير اسم الشاشة حسب اللي عندك
-                          ),
-                        );
+                        Get.to(() => LoginDoc(), transition: Transition.rightToLeft);
                       },
                       child: Text(
                         "Login",
@@ -274,14 +261,13 @@ class _loginState extends State<login> {
                     ),
                   ],
                 ),
-
-                 SizedBox(height: 30),
+                SizedBox(height: 30),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(child: Divider()),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 10),
                       child: Text(
                         "or",
                         style: TextStyle(
@@ -312,9 +298,9 @@ class _loginState extends State<login> {
 
                         final data = jsonDecode(response.body);
                         if (data['status'] == 'success') {
-                          // حفظ بيانات المستخدم وتوجيهه إلى الصفحة الرئيسية
+                          // Save user data and redirect to homepage
                         } else {
-                          // عرض رسالة خطأ
+                          // Show error message
                         }
                       }
                     }
@@ -330,7 +316,6 @@ class _loginState extends State<login> {
                       final AccessToken accessToken = result.accessToken!;
                       final String token = accessToken.tokenString;
 
-                      // إرسال token إلى واجهة PHP الخلفية للتحقق
                       final response = await http.post(
                         Uri.parse('https://yourdomain.com/api/facebook_login.php'),
                         body: {'access_token': token},
@@ -338,12 +323,12 @@ class _loginState extends State<login> {
 
                       final data = jsonDecode(response.body);
                       if (data['status'] == 'success') {
-                        // حفظ بيانات المستخدم وتوجيهه إلى الصفحة الرئيسية
+                        // Save user data and redirect to homepage
                       } else {
-                        // عرض رسالة خطأ
+                        // Show error message
                       }
                     } else {
-                      // عرض رسالة خطأ
+                      // Show error message
                     }
                   },
                 ),
@@ -355,4 +340,3 @@ class _loginState extends State<login> {
     );
   }
 }
-

@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 
-class message_all_widget extends StatelessWidget {
+class MessageAllWidgetController extends GetxController {
+  // Controller logic (if needed in the future) can be added here
+}
+
+class MessageAllWidget extends StatelessWidget {
   final String mainText;
   final String subText;
   final String image;
   final String time;
   final String messageCount;
 
-  message_all_widget({
+  MessageAllWidget({
     required this.mainText,
     required this.subText,
     required this.image,
@@ -18,11 +23,13 @@ class message_all_widget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final MessageAllWidgetController controller = Get.put(MessageAllWidgetController());
+
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10), // إضافة مسافة بين العناصر
+      margin: EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: [
-          // صورة المستخدم
+          // User image
           Container(
             height: MediaQuery.of(context).size.height * 0.06,
             width: MediaQuery.of(context).size.width * 0.150,
@@ -36,7 +43,7 @@ class message_all_widget extends StatelessWidget {
             ),
           ),
           SizedBox(width: 10),
-          // نص الرسالة
+          // Message text
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,7 +67,7 @@ class message_all_widget extends StatelessWidget {
               ],
             ),
           ),
-          // الوقت وعدد الرسائل
+          // Time and message count
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [

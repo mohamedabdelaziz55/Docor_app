@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
-
 import '../../constet.dart';
 import '../../doctor/ViewsDoc/HomepageDoc.dart';
-import '../../doctor/ViewsDoc/artcles.dart';
 import '../../doctor/ViewsDoc/articles_doc_screen.dart';
 import '../../doctor/ViewsDoc/edit_articles.dart';
 import '../../models/models_patient/model_doctors.dart';
 import '../../utils.dart';
 import '../../crud.dart';
+import '../ViewsDoc/artcles.dart';
 
 class CustomCardArticlesDoc extends StatelessWidget {
   CustomCardArticlesDoc({Key? key, required this.dataM}) : super(key: key);
 
   final DataArtices dataM;
   final Crud _crud = Crud();
+
+  final RxString currentUserId = ''.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -31,18 +31,11 @@ class CustomCardArticlesDoc extends StatelessWidget {
           return const SizedBox();
         }
 
-        final currentUserId = snapshot.data;
-        final isOwner = dataM.docId == currentUserId;
+        final isOwner = dataM.docId == snapshot.data;
 
         return GestureDetector(
           onTap: () {
-            Navigator.pushReplacement(
-              context,
-              PageTransition(
-                type: PageTransitionType.rightToLeft,
-                child: ArticleDetailsDocScreen(dataArtices: dataM),
-              ),
-            );
+            Get.off(() => ArticleDetailsDocScreen(dataArtices: dataM));
           },
           child: Container(
             margin: const EdgeInsets.all(12),
@@ -116,15 +109,9 @@ class CustomCardArticlesDoc extends StatelessWidget {
                             color: Colors.white,
                             onSelected: (value) async {
                               if (value == 'edit') {
-                                Navigator.pushReplacement(
-                                  context,
-                                  PageTransition(
-                                    type: PageTransitionType.rightToLeft,
-                                    child: EditArticles(article: dataM),
-                                  ),
-                                );
+                                Get.off(() => EditArticles(article: dataM));
                               } else if (value == 'delete') {
-                                _showDeleteConfirmation(context);
+                                _showDeleteConfirmation();
                               }
                             },
                             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
@@ -150,26 +137,20 @@ class CustomCardArticlesDoc extends StatelessWidget {
     );
   }
 
-  // تأكيد الحذف باستخدام AwesomeDialog
-  void _showDeleteConfirmation(BuildContext context) {
-    AwesomeDialog(
-      context: context,
-      dialogType: DialogType.warning,
-      animType: AnimType.rightSlide,
+  void _showDeleteConfirmation() {
+    Get.defaultDialog(
       title: 'Delete Article',
-      desc: 'Are you sure you want to delete this article?',
-      btnCancelText: 'No',
-      btnOkText: 'Yes',
-      btnCancelOnPress: () {},
-      btnOkOnPress: () async {
+      middleText: 'Are you sure you want to delete this article?',
+      textCancel: 'No',
+      textConfirm: 'Yes',
+      confirmTextColor: Colors.white,
+      onConfirm: () async {
         await deleteArticle(dataM.id.toString(), dataM.imageArticles ?? '');
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) =>  HomepageDoc()),
-        );
+        Get.off(() => HomepageDoc());
       },
-    ).show();
+    );
   }
+
   Future<void> deleteArticle(String articleId, String imageName) async {
     await _crud.postRequest(linkDeleteArtices, {
       "id": articleId,
@@ -178,7 +159,7 @@ class CustomCardArticlesDoc extends StatelessWidget {
   }
 
   Future<String?> _getCurrentUserId() async {
-    final sp = await SharedPreferences.getInstance();
+    final sp = await Get.putAsync(() async => await SharedPreferences.getInstance());
     return sp.getString('id');
   }
 }

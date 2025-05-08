@@ -1,22 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class Auth_text_field extends StatelessWidget {
+class AuthTextFieldController extends GetxController {
+
+}
+
+class AuthTextField extends StatelessWidget {
   final String text;
   final String icon;
-  final TextEditingController? controller;
+  final TextEditingController? textController;
   final String? Function(String?)? validator;
 
-  Auth_text_field({required this.text, required this.icon, this.controller, this.validator});
+  AuthTextField({
+    required this.text,
+    required this.icon,
+    this.textController,
+    this.validator,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final AuthTextFieldController controller = Get.put(AuthTextFieldController());
+
     return Center(
       child: Container(
         height: MediaQuery.of(context).size.height * 0.1,
         width: MediaQuery.of(context).size.width * 0.9,
         child: TextFormField(
           validator: validator,
-          controller: controller,
+          controller: textController,
           textAlign: TextAlign.start,
           textInputAction: TextInputAction.none,
           obscureText: false,

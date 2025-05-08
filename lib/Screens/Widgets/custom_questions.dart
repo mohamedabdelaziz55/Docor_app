@@ -3,49 +3,51 @@ import 'package:doctor_app/models/models_patient/model_date_json.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:get/get.dart';
 
 import '../../utils.dart';
 
-class CustomQuestions extends StatefulWidget {
+class CustomQuestionsController extends GetxController {
+  // Any state management or actions for questions can go here
+}
+
+class CustomQuestions extends StatelessWidget {
   const CustomQuestions({super.key, required this.modelAsk, this.onTapEdit, this.onTapDelete});
 
   final Data modelAsk;
-final void Function()? onTapEdit;
-final void Function()? onTapDelete;
-  @override
-  _CustomQuestionsState createState() => _CustomQuestionsState();
-}
-
-class _CustomQuestionsState extends State<CustomQuestions> {
-  bool isExpanded = false;
-
-  void _showMenuOptions() {
-    showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      builder: (_) {
-        return Wrap(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.edit),
-              title: const Text('تعديل'),
-              onTap: widget.onTapEdit,
-            ),
-            ListTile(
-              leading: const Icon(Icons.delete),
-              title: const Text('حذف'),
-              onTap:  widget.onTapDelete
-            ),
-          ],
-        );
-      },
-    );
-  }
+  final void Function()? onTapEdit;
+  final void Function()? onTapDelete;
 
   @override
   Widget build(BuildContext context) {
-    final questionText = widget.modelAsk.questionsText ?? 'لا يوجد محتوى';
-    final postDate = widget.modelAsk.postDate ?? '2023-01-01T00:00:00';
+    final CustomQuestionsController controller = Get.put(CustomQuestionsController());
+    bool isExpanded = false;
+
+    void _showMenuOptions() {
+      showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        builder: (_) {
+          return Wrap(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.edit),
+                title: const Text('Edit'),
+                onTap: onTapEdit,
+              ),
+              ListTile(
+                leading: const Icon(Icons.delete),
+                title: const Text('Delete'),
+                onTap: onTapDelete,
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    final questionText = modelAsk.questionsText ?? 'No content available';
+    final postDate = modelAsk.postDate ?? '2023-01-01T00:00:00';
 
     return Padding(
       padding: const EdgeInsets.all(12.0),
@@ -65,7 +67,6 @@ class _CustomQuestionsState extends State<CustomQuestions> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// Top Row (Time + Menu)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -88,7 +89,6 @@ class _CustomQuestionsState extends State<CustomQuestions> {
 
             const SizedBox(height: 10),
 
-            /// Question Text
             Text(
               questionText,
               maxLines: isExpanded ? null : 3,
@@ -97,18 +97,15 @@ class _CustomQuestionsState extends State<CustomQuestions> {
               style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
             ),
 
-            /// Read More
             if (questionText.length > 100)
               Align(
                 alignment: Alignment.centerLeft,
                 child: TextButton(
                   onPressed: () {
-                    setState(() {
-                      isExpanded = !isExpanded;
-                    });
+                    isExpanded = !isExpanded;
                   },
                   child: Text(
-                    isExpanded ? 'إظهار أقل' : 'اقرأ المزيد',
+                    isExpanded ? 'Show Less' : 'Read More',
                     style: const TextStyle(
                       fontSize: 13,
                       color: Color.fromARGB(255, 3, 190, 150),
@@ -120,37 +117,33 @@ class _CustomQuestionsState extends State<CustomQuestions> {
             const SizedBox(height: 10),
             const Divider(thickness: 0.6),
 
-            /// Bottom Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                /// Share
                 TextButton.icon(
                   onPressed: () {
                     // TODO: Share functionality
                   },
                   icon: const Icon(Icons.share, size: 18, color: Color.fromARGB(255, 3, 190, 150)),
                   label: const Text(
-                    'مشاركة',
+                    'Share',
                     style: TextStyle(color: Color.fromARGB(255, 3, 190, 150)),
                   ),
                 ),
 
-                /// Comments
                 TextButton.icon(
                   onPressed: () {
-                    // TODO: Navigate to comments section
                     Navigator.pushReplacement(
                       context,
                       PageTransition(
                         type: PageTransitionType.rightToLeft,
-                        child:  AnserQuestionsScreen(modelAsk: widget.modelAsk,), // Replace with comment screen
+                        child: AnserQuestionsScreen(modelAsk: modelAsk),
                       ),
                     );
                   },
                   icon: const Icon(CupertinoIcons.chat_bubble_text, size: 18, color: Color.fromARGB(255, 3, 190, 150)),
                   label: const Text(
-                    'تعليقات',
+                    'Comments',
                     style: TextStyle(color: Color.fromARGB(255, 3, 190, 150)),
                   ),
                 ),

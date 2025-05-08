@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:get/get.dart';
 
-class profile_list extends StatelessWidget {
+class ProfileListController extends GetxController {
+  // Controller logic (if needed) can be added here
+}
+
+class ProfileList extends StatelessWidget {
   final String title;
   final String image;
   final Color color;
-final void Function()? ontap;
-  profile_list({required this.image, required this.title, required this.color, this.ontap,});
+  final void Function()? ontap;
+
+  ProfileList({required this.image, required this.title, required this.color, this.ontap});
 
   @override
   Widget build(BuildContext context) {
+    final ProfileListController controller = Get.put(ProfileListController());
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Row(
@@ -51,10 +59,10 @@ final void Function()? ontap;
               GestureDetector(
                 onTap: ontap,
                 child: Container(
-                    height: MediaQuery.of(context).size.height * 0.06,
-                    width: MediaQuery.of(context).size.width * 0.1100,
-                    decoration: const BoxDecoration(),
-                    ),
+                  height: MediaQuery.of(context).size.height * 0.06,
+                  width: MediaQuery.of(context).size.width * 0.1100,
+                  decoration: const BoxDecoration(),
+                ),
               ),
             ]),
           ),

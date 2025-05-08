@@ -2,6 +2,7 @@ import 'package:doctor_app/Screens/Views/questions_screen.dart';
 import 'package:doctor_app/crud.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:get/get.dart';
 
 import '../../constet.dart';
 import '../../main.dart';
@@ -17,12 +18,13 @@ class _AskScreenState extends State<AskScreen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController text = TextEditingController();
   final Crud _crud = Crud();
+
   Future<void> addPost() async {
-    final userId =  sp.getString("id");
+    final userId = sp.getString("id");
     print("User ID: $userId");
     if (userId == null || text.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("الرجاء إدخال سؤال وتسجيل الدخول أولاً.")),
+        SnackBar(content: Text("Please enter a question and log in first.")),
       );
       return;
     }
@@ -34,19 +36,13 @@ class _AskScreenState extends State<AskScreen> {
 
     if (response["status"] == "success") {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("تم إرسال السؤال بنجاح")),
+        SnackBar(content: Text("Question submitted successfully")),
       );
-      Navigator.pushReplacement(
-        context,
-        PageTransition(
-          type: PageTransitionType.rightToLeft,
-          child: QuestionsScreen(),
-        ),
-      );
+      Get.offAll(() => QuestionsScreen());
       text.clear();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("فشل إرسال السؤال. حاول مرة أخرى.")),
+        SnackBar(content: Text("Failed to submit question. Try again.")),
       );
     }
   }
@@ -57,13 +53,7 @@ class _AskScreenState extends State<AskScreen> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              PageTransition(
-                type: PageTransitionType.rightToLeft,
-                child: QuestionsScreen(),
-              ),
-            );
+            Get.offAll(() => QuestionsScreen());
           },
           icon: Icon(Icons.arrow_back_ios),
         ),
@@ -93,7 +83,7 @@ class _AskScreenState extends State<AskScreen> {
                 controller: text,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'يرجى إدخال عنوان.';
+                    return 'Please enter a question.';
                   }
                   return null;
                 },

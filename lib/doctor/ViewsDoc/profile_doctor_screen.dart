@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ProfileDoctorScreen extends StatelessWidget {
   const ProfileDoctorScreen({super.key});
@@ -29,7 +30,7 @@ class ProfileDoctorScreen extends StatelessWidget {
             Image(
               image: AssetImage('assets/images/doctor3.png'),
               width: double.infinity,
-              height: h*0.4,
+              height: h * 0.4,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -51,13 +52,13 @@ class ProfileDoctorScreen extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: h*0.017),
-            Text('Medicine & Heart Speilst', style: TextStyle(fontSize: 16)),
+            SizedBox(height: h * 0.017),
+            Text('Medicine & Heart Specialist', style: TextStyle(fontSize: 16)),
             Text(
               'Good Health Clinic , MBBS,FCPS',
               style: TextStyle(
                 fontSize: 15,
-                color: Colors.black.withValues(alpha: 0.6),
+                color: Colors.black.withOpacity(0.6),
               ),
             ),
             Row(
@@ -69,11 +70,16 @@ class ProfileDoctorScreen extends StatelessWidget {
                 Icon(Icons.star, color: Colors.orangeAccent, size: 16),
               ],
             ),
-            SizedBox(height: 10,),
-            Text('About Serena',style: TextStyle(fontSize: w*0.04),)
-       , SizedBox(height: h*0.011),
-
-            Text(r'Throughout his career, he has demonstrated a commitment to improving patient health and well-being. Dr. Smith values open communication and takes the time to listen to his patients concerns, ensuring they feel comfortable and informed about their treatment options',style: TextStyle(fontSize: w*0.03, color: Colors.black.withValues(alpha: 0.6),),)
+            SizedBox(height: 10),
+            Text('About Serena', style: TextStyle(fontSize: w * 0.04)),
+            SizedBox(height: h * 0.011),
+            Text(
+              r'Throughout his career, he has demonstrated a commitment to improving patient health and well-being. Dr. Smith values open communication and takes the time to listen to his patients concerns, ensuring they feel comfortable and informed about their treatment options',
+              style: TextStyle(
+                fontSize: w * 0.03,
+                color: Colors.black.withOpacity(0.6),
+              ),
+            ),
           ],
         ),
       ),
@@ -87,7 +93,6 @@ class CustomListProfileDoctor extends StatelessWidget {
     required this.icon,
     required this.text,
     required this.color,
-    // required this.image,
   });
 
   final IconData icon;
