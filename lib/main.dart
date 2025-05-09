@@ -1,13 +1,13 @@
+import 'package:doctor_app/view/DoctorView/ViewsDoc/HomepageDoc.dart';
+import 'package:doctor_app/view/UserView/Login-Signup/login.dart';
+import 'package:doctor_app/view/UserView/Login-Signup/register.dart';
+import 'package:doctor_app/view/UserView/On_Board/on_boarding.dart';
+import 'package:doctor_app/view/UserView/Views/Homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Screens/Login-Signup/login.dart';
-import 'Screens/Login-Signup/register.dart';
-import 'Screens/On_Board/on_boarding.dart';
-import 'Screens/Views/Homepage.dart';
-import 'doctor/ViewsDoc/HomepageDoc.dart';
 
 late SharedPreferences sp;
 
